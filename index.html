@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global HVAC Converter Suite</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        body.dark {
+            background: #1a1a1a;
+            color: #eee;
+        }
+
+        header {
+            background: #0d2a4d;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .tabs {
+            display: flex;
+            background: #0d2a4d;
+            color: white;
+        }
+
+        .tab {
+            padding: 12px 18px;
+            cursor: pointer;
+            border-right: 1px solid #163a63;
+        }
+
+        .tab.active {
+            background: #163a63;
+            font-weight: bold;
+        }
+
+        .tab-section {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        body.dark .card {
+            background: #2a2a2a;
+        }
+
+        select, input {
+            padding: 8px;
+            width: 100%;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #0d2a4d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        button:hover {
+            background: #163a63;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <img src="icon.png" alt="Logo">
+    <h1>Global HVAC Converter Suite</h1>
+    <div style="margin-left:auto;">
+        <button onclick="toggleDarkMode()">Dark Mode: <span id='darkStatus'>OFF</span></button>
+    </div>
+</header>
+
+<div class="tabs">
+    <div class="tab active" data-tab="tab-convert" onclick="showTab('tab-convert')">Conversions</div>
+    <div class="tab" data-tab="tab-refrig" onclick="showTab('tab-refrig')">Refrigeration</div>
+    <div class="tab" data-tab="tab-airflow" onclick="showTab('tab-airflow')">Airflow</div>
+    <div class="tab" data-tab="tab-psychro" onclick="showTab('tab-psychro')">Psychrometrics</div>
+    <div class="tab" data-tab="tab-system" onclick="showTab('tab-system')">System Diagnostics</div>
+    <div class="tab" data-tab="tab-globalair" onclick="showTab('tab-globalair')">Global HVAC Solutions Air Flow Pro</div>
+</div>
+<!-- ============================= -->
+<!-- TAB: CONVERSIONS -->
+<!-- ============================= -->
+<div id="tab-convert" class="tab-section active">
+
+    <div class="card">
+        <h2>Conversions</h2>
+
+        <label>Type</label>
+        <select id="convertType">
+            <option value="kw-btu">kW → BTU/hr</option>
+            <option value="btu-kw">BTU/hr → kW</option>
+            <option value="cfm-lps">CFM → L/s</option>
+            <option value="lps-cfm">L/s → CFM</option>
+            <option value="psi-kpa">PSI → kPa</option>
+            <option value="kpa-psi">kPa → PSI</option>
+        </select>
+
+        <label>Value</label>
+        <input type="number" id="convertInput">
+
+        <button onclick="runConversion()">Convert</button>
+
+        <h3>Result:</h3>
+        <div id="convertResult"></div>
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- TAB: REFRIGERATION -->
+<!-- ============================= -->
+<div id="tab-refrig" class="tab-section">
+
+    <div class="card">
+        <h2>Refrigeration PT Chart</h2>
+
+        <label>Refrigerant</label>
+        <select id="refType">
+            <option value="R22">R-22</option>
+            <option value="R410A">R-410A</option>
+            <option value="R32">R-32</option>
+        </select>
+
+        <label>Temperature (°F)</label>
+        <input type="number" id="refTemp">
+
+        <button onclick="calcPT()">Calculate Pressure</button>
+
+        <h3>Pressure:</h3>
+        <div id="ptResult"></div>
+    </div>
+
+</div>
+<!-- ============================= -->
+<!-- TAB: AIRFLOW -->
+<!-- ============================= -->
+<div id="tab-airflow" class="tab-section">
+
+    <div class="card">
+        <h2>Airflow Calculator</h2>
+
+        <label>Total External Static Pressure (in WC)</label>
+        <input type="number" id="esp">
+
+        <label>Friction Rate (per 100 ft)</label>
+        <input type="number" id="friction">
+
+        <label>Total Effective Length (ft)</label>
+        <input type="number" id="tel">
+
+        <button onclick="calcAirflow()">Calculate Airflow</button>
+
+        <h3>Result:</h3>
+        <div id="airflowResult"></div>
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- TAB: PSYCHROMETRICS -->
+<!-- ============================= -->
+<div id="tab-psychro" class="tab-section">
+
+    <div class="card">
+        <h2>Psychrometric Calculator</h2>
+
+        <label>Dry Bulb (°F)</label>
+        <input type="number" id="db">
+
+        <label>Wet Bulb (°F)</label>
+        <input type="number" id="wb">
+
+        <button onclick="calcPsychro()">Calculate</button>
+
+        <h3>Results:</h3>
+        <div id="psychroResult"></div>
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- TAB: SYSTEM DIAGNOSTICS -->
+<!-- ============================= -->
+<div id="tab-system" class="tab-section">
+
+    <div class="card">
+        <h2>System Diagnostics</h2>
+
+        <label>Suction Pressure (PSI)</label>
+        <input type="number" id="suction">
+
+        <label>Liquid Pressure (PSI)</label>
+        <input type="number" id="liquid">
+
+        <label>Indoor Temp (°F)</label>
+        <input type="number" id="indoor">
+
+        <label>Outdoor Temp (°F)</label>
+        <input type="number" id="outdoor">
+
+        <button onclick="runDiagnostics()">Run Diagnostics</button>
+
+        <h3>Results:</h3>
+        <div id="diagResult"></div>
+    </div>
+
+</div>
+<!-- ============================= -->
+<!-- TAB: GLOBAL HVAC SOLUTIONS AIR FLOW PRO -->
+<!-- ============================= -->
+<div id="tab-globalair" class="tab-section">
+
+    <div class="card">
+        <h2>Global HVAC Solutions Air Flow Pro</h2>
+
+        <label>CFM</label>
+        <input type="number" id="proCfm">
+
+        <label>Duct Diameter (inches)</label>
+        <input type="number" id="proDia">
+
+        <button onclick="calcProAir()">Calculate Velocity</button>
+
+        <h3>Result:</h3>
+        <div id="proResult"></div>
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- JAVASCRIPT LOGIC -->
+<!-- ============================= -->
+<script>
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    document.getElementById('darkStatus').innerText =
+        document.body.classList.contains('dark') ? 'ON' : 'OFF';
+}
+
+// -------------------------------
+// TAB SWITCHING
+// -------------------------------
+function showTab(tabId) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
+
+    const section = document.getElementById(tabId);
+    if (!section) {
+        console.error("Missing tab section:", tabId);
+        return;
+    }
+
+    section.style.display = 'block';
+    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+}
+
+
+// -------------------------------
+// CONVERSIONS
+// -------------------------------
+function runConversion() {
+    let type = document.getElementById("convertType").value;
+    let val = parseFloat(document.getElementById("convertInput").value);
+    let out = "";
+
+    if (isNaN(val)) {
+        out = "Enter a valid number.";
+    } else {
+        switch (type) {
+            case "kw-btu": out = (val * 3412).toFixed(2) + " BTU/hr"; break;
+            case "btu-kw": out = (val / 3412).toFixed(4) + " kW"; break;
+            case "cfm-lps": out = (val * 0.4719).toFixed(2) + " L/s"; break;
+            case "lps-cfm": out = (val / 0.4719).toFixed(2) + " CFM"; break;
+            case "psi-kpa": out = (val * 6.89476).toFixed(2) + " kPa"; break;
+            case "kpa-psi": out = (val / 6.89476).toFixed(2) + " PSI"; break;
+        }
+    }
+
+    document.getElementById("convertResult").innerText = out;
+}
+
+
+// -------------------------------
+// PT CHART (SIMPLIFIED)
+// -------------------------------
+function calcPT() {
+    let ref = document.getElementById("refType").value;
+    let t = parseFloat(document.getElementById("refTemp").value);
+
+    if (isNaN(t)) {
+        document.getElementById("ptResult").innerText = "Enter a valid temperature.";
+        return;
+    }
+
+    let pressure = 0;
+
+    if (ref === "R22") pressure = t * 1.5 + 40;
+    if (ref === "R410A") pressure = t * 2.7 + 60;
+    if (ref === "R32") pressure = t * 2.1 + 55;
+
+    document.getElementById("ptResult").innerText =
+        pressure.toFixed(1) + " PSI (approx)";
+}
+
+
+// -------------------------------
+// AIRFLOW CALCULATOR
+// -------------------------------
+function calcAirflow() {
+    let esp = parseFloat(document.getElementById("esp").value);
+    let fr = parseFloat(document.getElementById("friction").value);
+    let tel = parseFloat(document.getElementById("tel").value);
+
+    if (isNaN(esp) || isNaN(fr) || isNaN(tel)) {
+        document.getElementById("airflowResult").innerText = "Enter all values.";
+        return;
+    }
+
+    let cfm = (esp / fr) * (100 / tel) * 1000;
+    document.getElementById("airflowResult").innerText =
+        cfm.toFixed(0) + " CFM (approx)";
+}
+
+
+// -------------------------------
+// PSYCHROMETRICS (SIMPLIFIED)
+// -------------------------------
+function calcPsychro() {
+    let db = parseFloat(document.getElementById("db").value);
+    let wb = parseFloat(document.getElementById("wb").value);
+
+    if (isNaN(db) || isNaN(wb)) {
+        document.getElementById("psychroResult").innerText = "Enter valid temps.";
+        return;
+    }
+
+    let rh = 100 - (db - wb) * 5;
+    if (rh < 0) rh = 0;
+
+    document.getElementById("psychroResult").innerText =
+        "Relative Humidity: " + rh.toFixed(1) + "%";
+}
+
+
+// -------------------------------
+// SYSTEM DIAGNOSTICS
+// -------------------------------
+function runDiagnostics() {
+    let s = parseFloat(document.getElementById("suction").value);
+    let l = parseFloat(document.getElementById("liquid").value);
+    let i = parseFloat(document.getElementById("indoor").value);
+    let o = parseFloat(document.getElementById("outdoor").value);
+
+    if ([s, l, i, o].some(v => isNaN(v))) {
+        document.getElementById("diagResult").innerText = "Enter all values.";
+        return;
+    }
+
+    let superheat = i - (s / 2);
+    let subcool = (l / 2) - o;
+
+    document.getElementById("diagResult").innerText =
+        "Superheat: " + superheat.toFixed(1) + "°F\n" +
+        "Subcooling: " + subcool.toFixed(1) + "°F";
+}
+
+
+// -------------------------------
+// GLOBAL HVAC SOLUTIONS AIR FLOW PRO
+// -------------------------------
+function calcProAir() {
+    let cfm = parseFloat(document.getElementById("proCfm").value);
+    let dia = parseFloat(document.getElementById("proDia").value);
+
+    if (isNaN(cfm) || isNaN(dia)) {
+        document.getElementById("proResult").innerText = "Enter valid values.";
+        return;
+    }
+
+    let area = 3.14159 * Math.pow(dia / 2, 2);
+    let vel = (cfm / area) * 144;
+
+    document.getElementById("proResult").innerText =
+        vel.toFixed(0) + " FPM (approx)";
+}
+
+</script>
+
+</body>
+</html>
+
