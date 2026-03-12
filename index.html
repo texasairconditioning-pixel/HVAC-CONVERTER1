@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global HVAC Converter Suite</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f2f2f2;
+        color: #000;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+        background: #1a1a1a;
+        color: #e6e6e6;
+    }
+    body.dark .box {
+        background: #2a2a2a;
+        color: #e6e6e6;
+    }
+    body.dark .tabs {
+        background: #00385a;
+    }
+    body.dark .tab {
+        color: #cfe8ff;
+    }
+    body.dark .tab.active {
+        background: #1a1a1a;
+        color: #fff;
+    }
+    body.dark button {
+        background: #0063a5;
+    }
+    body.dark footer {
+        background: #00385a;
+        border-top-color: #002a44;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        padding: 10px 15px;
+        border-bottom: 2px solid #004b7a;
+    }
+    header img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 0;
+        background: #fff;
+        border: 2px solid #004b7a;
+    }
+    header .title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-left: 10px;
+        color: #004b7a;
+    }
+    header .left {
+        display: flex;
+        align-items: center;
+    }
+    header .toggle {
+        font-size: 14px;
+        cursor: pointer;
+        color: #004b7a;
+        font-weight: bold;
+    }
+
+    .tabs {
+        display: flex;
+        overflow-x: auto;
+        background: #004b7a;
+    }
+    .tab {
+        flex: 1;
+        text-align: center;
+        padding: 10px 6px;
+        color: #cfe8ff;
+        font-size: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .tab.active {
+        background: #ffffff;
+        color: #004b7a;
+        font-weight: bold;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    .content {
+        padding: 10px;
+    }
+    .box {
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 10px;
+        margin-top: 10px;
+        transition: background 0.3s, color 0.3s;
+    }
+    h2 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        color: #004b7a;
+    }
+    label {
+        font-weight: bold;
+        margin-top: 8px;
+        display: block;
+        font-size: 13px;
+    }
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    button {
+        width: 100%;
+        padding: 9px;
+        font-size: 14px;
+        margin-top: 10px;
+        background: #004b7a;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0063a5;
+    }
+    .result {
+        margin-top: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+        min-height: 20px;
+        white-space: pre-line;
+    }
+
+    footer {
+        background:#004b7a;
+        color:white;
+        text-align:center;
+        padding:15px 10px;
+        margin-top:20px;
+        font-size:14px;
+        border-top:3px solid #00385a;
+    }
+</style>
+
+<script>
+// -------------------------------
+// DARK MODE
+// -------------------------------
+function toggleDarkMode() {
+    const body = document.body;
+    const toggle = document.getElementById("darkToggle");
+
+    body.classList.toggle("dark");
+
+    const isDark = body.classList.contains("dark");
+    toggle.textContent = "Dark Mode: " + (isDark ? "ON" : "OFF");
+
+    localStorage.setItem("darkMode", isDark ? "on" : "off");
+}
+
+window.onload = function() {
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark");
+        document.getElementById("darkToggle").textContent = "Dark Mode: ON";
+    }
+    showTab('tab-convert');
+};
+
+// -------------------------------
+// TABS
+// -------------------------------
+function showTab(tabId) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-section').forEach(s => s.style.display = 'none');
+
+    document.getElementById(tabId).style.display = 'block';
+    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+}
+
+// -------------------------------
+// CONVERSIONS
+// -------------------------------
+const conversions = {
+    "kw_btu":  i => i * 3412.142,
+    "btu_kw":  i => i / 3412.142,
+    "kw_ton":  i => i / 3.5168525,
+    "ton_kw":  i => i * 3.5168525,
+    "cfm_fpm": i => i * 144,
+    "fpm_cfm": i => i / 144,
+    "ls_cfm":  i => i * 2.11888,
+    "cfm_ls":  i => i / 2.11888,
+    "psi_inwc": i => i * 27.7076,
+    "inwc_psi": i => i / 27.7076,
+    "pa_inwc":  i => i / 249.0889,
+    "inwc_pa":  i => i * 249.0889,
+    "c_f": i => (i * 9/5) + 32,
+    "f_c": i => (i - 32) * 5/9,
+    "w_kw": i => i / 1000,
+    "kw_w": i => i * 1000
+};
+
+function convert() {
+    const type = document.getElementById("conversion").value;
+    const input = parseFloat(document.getElementById("value").value);
+    const output = document.getElementById("output");
+
+    if (isNaN(input)) {
+        output.textContent = "Enter a number";
+        return;
+    }
+
+    output.textContent = conversions[type](input).toFixed(3);
+}
+
+// -------------------------------
+// PT CHART (FIXED)
+// -------------------------------
+const ptData = {
+    "R410A": [
+        {p: 100, t: 31}, {p: 150, t: 45}, {p: 200, t: 57},
+        {p: 250, t: 67}, {p: 300, t: 76}, {p: 350, t: 84}, {p: 400, t: 91}
+    ],
+    "R22": [
+        {p: 50, t: 26}, {p: 75, t: 40}, {p: 100, t: 50},
+        {p: 125, t: 59}, {p: 150, t: 67}, {p: 175, t: 74}, {p: 200, t: 80}
+    ],
+    "R32": [
+        {p: 100, t: 14}, {p: 150, t: 29}, {p: 200, t: 41},
+        {p: 250, t: 52}, {p: 300, t: 61}, {p: 350, t: 69}, {p: 400, t: 76}
+    ],
+    "R407C": [
+        {p: 75, t: 26}, {p: 100, t: 37}, {p: 125, t: 47},
+        {p: 150, t: 55}, {p: 175, t: 62}, {p: 200, t: 69}, {p: 225, t: 75}
+    ],
+    "R134a": [
+        {p: 25, t: 22}, {p: 50, t: 40}, {p: 75, t: 52},
+        {p: 100, t: 62}, {p: 125, t: 70}, {p: 150, t: 77}, {p: 175, t: 83}
+    ],
+    "R454B": [
+        {p: 100, t: 24}, {p: 150, t: 38}, {p: 200, t: 49},
+        {p: 250, t: 59}, {p: 300, t: 68}, {p: 350, t: 76}, {p: 400, t: 83}
+    ]
+};
+
+function calcPT() {
+    const ref = document.getElementById("pt_ref").value;
+    const mode = document.getElementById("pt_mode").value;
+    const input = parseFloat(document.getElementById("pt_input").value);
+    const out = document.getElementById("pt_result");
+
+    if (isNaN(input)) {
+        out.textContent = "Enter a value";
+        return;
+    }
+
+    const data = ptData[ref];
+
+    if (mode === "PtoT") {
+        let result = interpolate(data, "p", "t", input);
+        out.textContent = result.toFixed(1) + " °F";
+    } else {
+        let result = interpolate(data, "t", "p", input);
+        out.textContent = result.toFixed(0) + " psig";
+    }
+}
+
+function interpolate(list, xKey, yKey, xVal) {
+    for (let i = 0; i < list.length - 1; i++) {
+        const a = list[i];
+        const b = list[i + 1];
+
+        if (xVal >= a[xKey] && xVal <= b[xKey]) {
+            const ratio = (xVal - a[xKey]) / (b[xKey] - a[xKey]);
+            return a[yKey] + ratio * (b[yKey] - a[yKey]);
+        }
+    }
+    return list[list.length - 1][yKey];
+}
+
+// -------------------------------
+// SIMPLE AIRFLOW (FIXED)
+// -------------------------------
+function calcCFM() {
+    const area = parseFloat(document.getElementById("af_area").value);
+    const vel = parseFloat(document.getElementById("af_vel").value);
+    document.getElementById("af_result").textContent =
+        isNaN(area) || isNaN(vel) ? "Enter both" : (area * vel).toFixed(1) + " CFM";
+}
+
+function calcVelocity() {
+    const cfm = parseFloat(document.getElementById("af_cfm").value);
+    const area = parseFloat(document.getElementById("af_area2").value);
+    document.getElementById("af_result2").textContent =
+        isNaN(cfm) || isNaN(area) ? "Enter both" : (cfm / area).toFixed(1) + " FPM";
+}
+
+function calcDuct() {
+    const cfm = parseFloat(document.getElementById("ds_cfm").value);
+    const vel = parseFloat(document.getElementById("ds_vel").value);
+
+    if (isNaN(cfm) || isNaN(vel)) {
+        document.getElementById("ds_result").textContent = "Enter all values";
+        return;
+    }
+
+    const dia = Math.sqrt((144 * cfm) / (Math.PI * vel));
+    const area = cfm / vel;
+
+    document.getElementById("ds_result").textContent =
+        "Round Duct: " + dia.toFixed(1) + " in\n" +
+        "Rectangular Area: " + area.toFixed(2) + " sq ft";
+}
+
+// -------------------------------
+// GLOBAL HVAC SOLUTIONS AIR FLOW PRO (FULL MANUAL-D)
+// -------------------------------
+function calcManualD() {
+    const cfm = parseFloat(document.getElementById("md_cfm").value);
+    const esp = parseFloat(document.getElementById("md_esp").value);
+    const fDrop = parseFloat(document.getElementById("md_filter").value);
+    const cDrop = parseFloat(document.getElementById("md_coil").value);
+    const aDrop = parseFloat(document.getElementById("md_acc").value);
+    const tel = parseFloat(document.getElementById("md_tel").value);
+
+    const out = document.getElementById("md_result");
+
+    if ([cfm, esp, fDrop, cDrop, aDrop, tel].some(v => isNaN(v))) {
+        out.textContent = "Enter all values";
+        return;
+    }
+
+    const asp = esp - (fDrop + cDrop + aDrop);
+    if (asp <= 0) {
+        out.textContent = "ASP ≤ 0. Reduce drops or increase ESP.";
+        return;
+    }
+
+    const fr = (asp * 100) / tel;
+    if (fr <= 0) {
+        out.textContent = "FR ≤ 0. Check TEL.";
+        return;
+    }
+
+    const dia = Math.pow(Math.pow(cfm, 1.9) / fr, 1/5);
+    const area = (Math.PI * Math.pow(dia, 2) / 4) / 144;
+    const vel = cfm / area;
+
+    let note = vel < 600 ? "Quiet"
+             : vel <= 900 ? "Normal"
+             : "High / Noisy";
+
+    out.textContent =
+        "ASP: " + asp.toFixed(3) + " in.wc\n" +
+        "FR: " + fr.toFixed(3) + " in.wc/100ft\n" +
+        "Diameter: " + dia.toFixed(1) + " in\n" +
+        "Area: " + area.toFixed(2) + " sq ft\n" +
+        "Velocity: " + vel.toFixed(0) + " FPM\n" +
+        "Note: " + note;
+}
+
+// -------------------------------
+// SYSTEM DIAGNOSTICS
+// -------------------------------
+function calcDeltaT() {
+    const ret = parseFloat(document.getElementById("sd_return").value);
+    const sup = parseFloat(document.getElementById("sd_supply").value);
+    document.getElementById("sd_result").textContent =
+        isNaN(ret) || isNaN(sup) ? "Enter both" : (ret - sup).toFixed(1) + " °F";
+}
+
+function calcStatic() {
+    const r = parseFloat(document.getElementById("sp_return").value);
+    const s = parseFloat(document.getElementById("sp_supply").value);
+    const total = r + s;
+
+    let status = total <= 0.5 ? "GOOD"
+               : total <= 0.8 ? "HIGH"
+               : "CRITICAL";
+
+    document.getElementById("sp_result").textContent =
+        isNaN(r) || isNaN(s) ? "Enter both" : total.toFixed(2) + " in.wc — " + status;
+}
+</script>
+</head>
+
+<body>
+<header>
+    <div class="left">
+        <img src="icon.png" alt="Logo">
+        <div class="title">Global HVAC Converter Suite</div>
+    </div>
+    <div id="darkToggle" class="toggle" onclick="toggleDarkMode()">Dark Mode: OFF</div>
+</header>
+
+<div class="tabs">
+    <div class="tab active" data-tab="tab-convert" onclick="showTab('tab-convert')">Conversions</div>
+    <div class="tab" data-tab="tab-refrig" onclick="showTab('tab-refrig')">Refrigeration</div>
+    <div class="tab" data-tab="tab-airflow" onclick="showTab('tab-airflow')">Airflow</div>
+    <div class="tab" data-tab="tab-psychro" onclick="showTab('tab-psychro')">Psychrometrics</div>
+    <div class="tab" data-tab="tab-system" onclick="showTab('tab-system')">System Diagnostics</div>
+    <div class="tab" data-tab="tab-globalair" onclick="showTab('tab-globalair')">Global HVAC Solutions Air Flow Pro</div>
+</div>
+
+<div class="content">
+
+<!-- ------------------ CONVERSIONS ------------------ -->
+<div id="tab-convert" class="tab-section">
+    <div class="box">
+        <h2>Conversions</h2>
+
+        <label>Type</label>
+        <select id="conversion">
+            <option value="kw_btu">kW → BTU/hr</option>
+            <option value="btu_kw">BTU/hr → kW</option>
+            <option value="kw_ton">kW → Tons</option>
+            <option value="ton_kw">Tons → kW</option>
+            <option value="cfm_fpm">CFM → FPM</option>
+            <option value="fpm_c
