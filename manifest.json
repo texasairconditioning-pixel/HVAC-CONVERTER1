@@ -1,4 +1,5 @@
 {
+  "version": "2",
   "name": "HVAC Converter",
   "short_name": "HVAC",
   "start_url": "index.html",
@@ -12,4 +13,5 @@
       "type": "image/png"
     }
   ]
+
 }
