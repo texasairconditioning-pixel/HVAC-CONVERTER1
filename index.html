@@ -1,79 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global HVAC Solutions — Field Tools Suite</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; color: #333; }
-    .header { background: #003366; color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; }
-    .tab-buttons { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: #ddd; justify-content: center; }
-    .tab-buttons button { padding: 10px 16px; border: none; border-radius: 6px; background: #003366; color: white; cursor: pointer; font-size: 15px; transition: background 0.2s; }
-    .tab-buttons button:hover, .tab-buttons button.active { background: #0055aa; }
-    .tab-section { display: none; padding: 20px; }
-    .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto; }
-    label { display: block; margin: 12px 0 4px; font-weight: bold; }
-    input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
-    button.calc-btn { margin-top: 12px; padding: 10px 16px; background: #006400; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; }
-    button.calc-btn:hover { background: #008f00; }
-    pre { background: #111; color: #0f0; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; }
-    h2, h3 { margin-top: 0; }
-  </style>
-</head>
-<body>
-
-<div class="header">Global HVAC Solutions — Field Tools Suite</div>
-
-<div class="tab-buttons">
-  <button data-tab="tab-convert">Conversions</button>
-  <button data-tab="tab-airflow">Airflow</button>
-  <button data-tab="tab-globalairflow">Air Flow Pro</button>
-  <button data-tab="tab-psych">Psychrometrics</button>
-  <button data-tab="tab-diagnostics">Diagnostics</button>
-  <button data-tab="tab-refrig" class="active">Refrigeration</button>
-</div>
-
-<div id="tab-convert" class="tab-section"><div class="card"><h2>Conversions</h2><p>Conversion tools will go here.</p></div></div>
-<div id="tab-airflow" class="tab-section"><div class="card"><h2>Airflow</h2><p>Airflow tools will go here.</p></div></div>
-<div id="tab-globalairflow" class="tab-section"><div class="card"><h2>Air Flow Pro</h2><p>Advanced airflow tools will go here.</p></div></div>
-<div id="tab-psych" class="tab-section"><div class="card"><h2>Psychrometrics</h2><p>Psychrometric tools will go here.</p></div></div>
-<div id="tab-diagnostics" class="tab-section"><div class="card"><h2>Diagnostics</h2><p>Diagnostic tools will go here.</p></div></div>
-
-<div id="tab-refrig" class="tab-section">
-  <div class="card">
-    <h2>Refrigeration — PT, Superheat, Subcooling Suite</h2>
-    <!-- ... your full refrigeration content here ... keep it as is from previous version ... -->
-    <!-- For brevity I'm not repeating the whole PT/calc code, but paste your working refrigeration section in place -->
-  </div>
-</div>
-
 <script>
-// Tab switching - pure addEventListener style (more reliable locally)
+// Tab switching - aggressive local-file friendly version
 function openTab(tabId) {
-  document.querySelectorAll('.tab-section').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.tab-buttons button').forEach(btn => btn.classList.remove('active'));
+  // Hide everything
+  document.querySelectorAll('.tab-section').forEach(function(el) {
+    el.style.display = 'none';
+  });
+  // Remove active class from buttons
+  document.querySelectorAll('.tab-buttons button').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
 
-  const target = document.getElementById(tabId);
-  if (target) target.style.display = 'block';
+  // Show selected tab
+  var target = document.getElementById(tabId);
+  if (target) {
+    target.style.display = 'block';
+  }
 
-  const btn = document.querySelector(`button[data-tab="${tabId}"]`);
-  if (btn) btn.classList.add('active');
+  // Highlight button
+  var btn = document.querySelector('button[data-tab="' + tabId + '"]');
+  if (btn) {
+    btn.classList.add('active');
+  }
 }
 
-// Attach listeners once DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.tab-buttons button').forEach(button => {
-    button.addEventListener('click', () => {
-      openTab(button.getAttribute('data-tab'));
+// Setup tabs as soon as possible
+function init() {
+  // Attach click listeners
+  var buttons = document.querySelectorAll('.tab-buttons button');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function() {
+      var tabId = this.getAttribute('data-tab');
+      openTab(tabId);
     });
-  });
+  }
 
   // Show default tab
   openTab('tab-refrig');
-});
+}
+
+// Run now if DOM is already ready, otherwise wait
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(init, 1);  // tiny delay helps on file://
+} else {
+  document.addEventListener('DOMContentLoaded', init);
+}
+
+// Extra fallback (some browsers need this on file://)
+setTimeout(init, 500);
 </script>
-
-<!-- Paste your full refrigeration <script> here (the one with PT_DATA, interpolate, lookupPressure, etc.) -->
-
-</body>
-</html>
