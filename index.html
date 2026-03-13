@@ -5,67 +5,88 @@
 <title>Global HVAC Solutions — Field Tools Suite</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f4f4f4;
-    }
-
-    .header {
-        background: #003366;
-        color: white;
-        padding: 15px;
-        text-align: center;
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .tab-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        background: #ddd;
-        padding: 10px;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .tab-buttons button {
-        padding: 10px 16px;
-        border: none;
-        background: #003366;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 15px;
-    }
-
-    .tab-buttons button:hover {
-        background: #0055aa;
-    }
-
-    .tab-section {
-        display: none;
-        padding: 20px;
-    }
-
-    .card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 6px rgba(0,0,0,0.2);
-        margin-bottom: 20px;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+  }
+  .header {
+    background: #003366;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .tab-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    background: #ddd;
+    justify-content: center;
+  }
+  .tab-buttons button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #003366;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .tab-buttons button:hover {
+    background: #0055aa;
+  }
+  .tab-section {
+    display: none;
+    padding: 16px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+  }
+  input, select {
+    width: 100%;
+    padding: 6px;
+    margin-top: 4px;
+    box-sizing: border-box;
+  }
+  button.calc-btn {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #006400;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button.calc-btn:hover {
+    background: #008f00;
+  }
+  pre {
+    background: #111;
+    color: #0f0;
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 12px;
+  }
 </style>
-
 </head>
 <body>
 
 <div class="header">Global HVAC Solutions — Field Tools Suite</div>
 
-<!-- ============================== -->
 <!-- TAB BUTTONS -->
-<!-- ============================== -->
 <div class="tab-buttons">
   <button onclick="openTab('tab-convert')">Conversions</button>
   <button onclick="openTab('tab-airflow')">Airflow</button>
@@ -75,9 +96,7 @@
   <button onclick="openTab('tab-refrig')">Refrigeration</button>
 </div>
 
-<!-- ============================== -->
 <!-- TAB SECTIONS -->
-<!-- ============================== -->
 
 <div id="tab-convert" class="tab-section">
   <div class="card">
@@ -88,7 +107,7 @@
 
 <div id="tab-airflow" class="tab-section">
   <div class="card">
-    <h2>Airflow Calculator</h2>
+    <h2>Airflow</h2>
     <p>Airflow tools will go here.</p>
   </div>
 </div>
@@ -114,137 +133,198 @@
   </div>
 </div>
 
-<!-- ============================== -->
 <!-- REFRIGERATION TAB -->
-<!-- ============================== -->
 <div id="tab-refrig" class="tab-section">
   <div class="card">
-    <h2>Refrigeration Calculator</h2>
+    <h2>Refrigeration — Professional PT, SH, SC Suite</h2>
 
-    <label>Refrigerant:</label>
-    <select id="refType">
-      <option value="R410A">R410A</option>
+    <!-- Refrigerant selection -->
+    <label for="refSelect">Refrigerant Selection</label>
+    <select id="refSelect">
       <option value="R22">R22</option>
       <option value="R32">R32</option>
+      <option value="R410A">R410A</option>
+      <option value="R454B">R454B</option>
+      <option value="R407C">R407C</option>
+      <option value="R134A">R134A</option>
+      <option value="R404A">R404A</option>
+      <option value="R448A">R448A</option>
+      <option value="R449A">R449A</option>
+      <option value="R507A">R507A</option>
+      <option value="R513A">R513A</option>
+      <option value="R450A">R450A</option>
+      <option value="R1234ZE">R1234ZE</option>
+      <option value="R290">R290</option>
+      <option value="R600A">R600A</option>
+      <option value="R717">R717</option>
+      <option value="R427A">R427A</option>
+      <option value="R421A">R421A</option>
     </select>
 
-    <br><br>
+    <!-- PT: Temp -> Pressure -->
+    <h3 style="margin-top:16px;">1. Saturation Pressure Lookup (Temp → Pressure)</h3>
+    <label for="ptTempInput">Saturation Temperature (°F)</label>
+    <input id="ptTempInput" type="number" step="0.1">
+    <button class="calc-btn" onclick="lookupPressure()">Lookup Pressure</button>
+    <p id="ptPressureOutput"></p>
 
-    <label>Evap Pressure (PSIG):</label>
-    <input id="evapP" type="number">
+    <!-- PT: Pressure -> Temp -->
+    <h3 style="margin-top:16px;">2. Saturation Temperature Lookup (Pressure → Temp)</h3>
+    <label for="ptPressInput">Saturation Pressure (PSIG)</label>
+    <input id="ptPressInput" type="number" step="0.1">
+    <button class="calc-btn" onclick="lookupTemp()">Lookup Temperature</button>
+    <p id="ptTempOutput"></p>
 
-    <label>Evap Line Temp (°F):</label>
-    <input id="evapT" type="number">
+    <!-- Superheat -->
+    <h3 style="margin-top:16px;">3. Superheat Calculator</h3>
+    <label for="evapPressInput">Evap Pressure (PSIG)</label>
+    <input id="evapPressInput" type="number" step="0.1">
+    <label for="evapLineTempInput">Evap Line Temp (°F)</label>
+    <input id="evapLineTempInput" type="number" step="0.1">
+    <button class="calc-btn" onclick="calcSH()">Calculate Superheat</button>
+    <p id="shOutput"></p>
 
-    <button onclick="calcSH()">Calculate Superheat</button>
+    <!-- Subcooling -->
+    <h3 style="margin-top:16px;">4. Subcooling Calculator</h3>
+    <label for="condPressInput">Cond Pressure (PSIG)</label>
+    <input id="condPressInput" type="number" step="0.1">
+    <label for="liqLineTempInput">Liquid Line Temp (°F)</label>
+    <input id="liqLineTempInput" type="number" step="0.1">
+    <button class="calc-btn" onclick="calcSC()">Calculate Subcooling</button>
+    <p id="scOutput"></p>
 
-    <p id="superheatResult"></p>
-
-    <hr>
-
-    <label>Cond Pressure (PSIG):</label>
-    <input id="condP" type="number">
-
-    <label>Liquid Line Temp (°F):</label>
-    <input id="liqT" type="number">
-
-    <button onclick="calcSC()">Calculate Subcooling</button>
-
-    <p id="subcoolResult"></p>
-
-    <hr>
-
-    <h3>System Summary</h3>
+    <!-- Summary -->
+    <h3 style="margin-top:16px;">5. Full Summary</h3>
     <pre id="summaryOutput"></pre>
-
   </div>
 </div>
 
-<!-- ============================== -->
-<!-- JAVASCRIPT -->
-<!-- ============================== -->
+<!-- TAB SWITCHING SCRIPT -->
 <script>
 function openTab(tabId) {
-    document.querySelectorAll('.tab-section').forEach(section => {
-        section.style.display = 'none';
-    });
-
-    const target = document.getElementById(tabId);
-    if (target) {
-        target.style.display = 'block';
-    }
+  document.querySelectorAll('.tab-section').forEach(section => {
+    section.style.display = 'none';
+  });
+  const target = document.getElementById(tabId);
+  if (target) {
+    target.style.display = 'block';
+  }
 }
 
 // Default tab on load
-document.addEventListener("DOMContentLoaded", () => {
-    openTab('tab-convert');
+document.addEventListener('DOMContentLoaded', () => {
+  openTab('tab-convert');
 });
 </script>
 
+<!-- REFRIGERATION ENGINE -->
 <script>
-/* Refrigeration Logic — SAME CODE YOU ALREADY HAVE */
-let last_evapT = null;
-let last_condT = null;
-let last_evapP = null;
-let last_condP = null;
-let last_SH = null;
-let last_SC = null;
+// PT DATA (from your suite)
+const PT_DATA = {
+  "R22":    { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 7,12,18,26,35,47,62,80,102,128,160] },
+  "R410A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [18,28,41,58,80,110,150,200,260,330,420] },
+  "R32":    { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [25,36,60,82,125,170,225,295,380,480] },
+  "R454B":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [15,23,33,47,65,90,120,160,210,270,340] },
+  "R407C":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 5, 9,14,21,30,42,58,78,105,135,170] },
+  "R134A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 1, 3, 5, 8,12,18,26,36, 48, 63, 82] },
+  "R404A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 5, 9,14,21,30,42,58,78,105,135,170] },
+  "R448A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 7,12,18,26,36,50,68,90,118,152,195] },
+  "R449A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 7,12,18,26,36,50,68,90,118,152,195] },
+  "R507A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 6,10,15,22,32,45,62,83,110,145,185] },
+  "R513A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 2, 4, 6, 9,14,20,28,38, 50, 65, 84] },
+  "R450A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 1, 3, 5, 8,12,18,26,36, 48, 63, 82] },
+  "R1234ZE":{ temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 1, 2, 4, 6, 9,14,20,28, 38, 50, 65] },
+  "R290":   { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 0, 1, 2, 3, 5, 8,12,17, 23, 31, 41] },
+  "R600A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 0, 1, 1, 2, 3, 5, 7,10, 14, 20, 29] },
+  "R717":   { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [-14,-10,-6,-2, 3,10,18,26,36,47,60] },
+  "R427A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 6,10,15,22,32,45,62,83,110,145,185] },
+  "R421A":  { temps: [-40,-30,-20,-10, 0,10,20,30,40,50,60], press: [ 7,12,18,26,36,50,68,90,118,152,195] }
+};
 
+// Linear interpolation
+function interp(x, xs, ys) {
+  for (let i = 0; i < xs.length - 1; i++) {
+    if (x >= xs[i] && x <= xs[i+1]) {
+      const ratio = (x - xs[i]) / (xs[i+1] - xs[i]);
+      return ys[i] + ratio * (ys[i+1] - ys[i]);
+    }
+  }
+  return null;
+}
+
+// Temp → Pressure
+function lookupPressure() {
+  const ref = document.getElementById("refSelect").value;
+  const t = parseFloat(document.getElementById("ptTempInput").value);
+  if (isNaN(t)) return;
+
+  const data = PT_DATA[ref];
+  const p = interp(t, data.temps, data.press);
+
+  document.getElementById("ptPressureOutput").innerText =
+    p === null ? "Out of range" : `${p.toFixed(1)} PSIG`;
+}
+
+// Pressure → Temp
+function lookupTemp() {
+  const ref = document.getElementById("refSelect").value;
+  const p = parseFloat(document.getElementById("ptPressInput").value);
+  if (isNaN(p)) return;
+
+  const data = PT_DATA[ref];
+  const t = interp(p, data.press, data.temps);
+
+  document.getElementById("ptTempOutput").innerText =
+    t === null ? "Out of range" : `${t.toFixed(1)} °F`;
+}
+
+// Superheat
 function calcSH() {
-    const evapP = parseFloat(document.getElementById("evapP").value);
-    const evapT = parseFloat(document.getElementById("evapT").value);
+  const ref = document.getElementById("refSelect").value;
+  const p = parseFloat(document.getElementById("evapPressInput").value);
+  const lineT = parseFloat(document.getElementById("evapLineTempInput").value);
+  if (isNaN(p) || isNaN(lineT)) return;
 
-    if (isNaN(evapP) || isNaN(evapT)) return;
+  const data = PT_DATA[ref];
+  const satT = interp(p, data.press, data.temps);
+  const SH = lineT - satT;
 
-    const satT = evapP * 1.5; // placeholder
-    const SH = evapT - satT;
+  document.getElementById("shOutput").innerText =
+    `Sat Temp: ${satT.toFixed(1)} °F\nSuperheat: ${SH.toFixed(1)} °F`;
 
-    last_evapP = evapP;
-    last_evapT = satT;
-    last_SH = SH;
-
-    document.getElementById("superheatResult").innerText =
-        `Saturation Temp: ${satT.toFixed(1)} °F\n` +
-        `Superheat: ${SH.toFixed(1)} °F`;
-
-    updateSummary();
+  updateSummary();
 }
 
+// Subcooling
 function calcSC() {
-    const condP = parseFloat(document.getElementById("condP").value);
-    const liqT = parseFloat(document.getElementById("liqT").value);
+  const ref = document.getElementById("refSelect").value;
+  const p = parseFloat(document.getElementById("condPressInput").value);
+  const liqT = parseFloat(document.getElementById("liqLineTempInput").value);
+  if (isNaN(p) || isNaN(liqT)) return;
 
-    if (isNaN(condP) || isNaN(liqT)) return;
+  const data = PT_DATA[ref];
+  const satT = interp(p, data.press, data.temps);
+  const SC = satT - liqT;
 
-    const satT = condP * 1.5; // placeholder
-    const SC = satT - liqT;
+  document.getElementById("scOutput").innerText =
+    `Sat Temp: ${satT.toFixed(1)} °F\nSubcooling: ${SC.toFixed(1)} °F`;
 
-    last_condP = condP;
-    last_condT = satT;
-    last_SC = SC;
-
-    document.getElementById("subcoolResult").innerText =
-        `Saturation Temp: ${satT.toFixed(1)} °F\n` +
-        `Subcooling: ${SC.toFixed(1)} °F`;
-
-    updateSummary();
+  updateSummary();
 }
 
+// Summary
 function updateSummary() {
-    const ref = document.getElementById("refType").value;
+  const ref = document.getElementById("refSelect").value;
 
-    let out = `Refrigerant: ${ref}\n\n`;
+  let out = `Refrigerant: ${ref}\n\n`;
 
-    if (last_evapT !== null) out += `Evap Sat Temp: ${last_evapT.toFixed(1)} °F\n`;
-    if (last_evapP !== null) out += `Evap Pressure: ${last_evapP.toFixed(1)} PSIG\n`;
+  const sh = document.getElementById("shOutput").innerText;
+  const sc = document.getElementById("scOutput").innerText;
 
-    if (last_condT !== null) out += `Cond Sat Temp: ${last_condT.toFixed(1)} °F\n`;
-    if (last_condP !== null) out += `Cond Pressure: ${last_condP.toFixed(1)} PSIG\n`;
+  if (sh.trim() !== "") out += sh + "\n\n";
+  if (sc.trim() !== "") out += sc + "\n";
 
-    if (last_SH !== null) out += `Superheat: ${last_SH.toFixed(1)} °F\n`;
-    if (last_SC !== null) out += `Subcooling: ${last_SC.toFixed(1)} °F\n`;
-
-    document.getElementById("summaryOutput").innerText = out;
+  document.getElementById("summaryOutput").innerText = out;
 }
 </script>
 
