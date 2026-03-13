@@ -555,3 +555,19 @@ function updateSummary() {
 
     document.getElementById("summaryOutput").innerText = out;
 }
+</script>
+<script>
+function openTab(tabId) {
+  document.querySelectorAll('.tab-section').forEach(section => {
+    section.style.display = 'none';
+  });
+
+  const target = document.getElementById(tabId);
+  if (target) {
+    target.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>
+            
