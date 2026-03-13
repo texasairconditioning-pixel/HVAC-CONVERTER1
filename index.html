@@ -1,0 +1,464 @@
+<div class="card">
+    <h2>Refrigeration — Professional PT, SH, SC Suite</h2>
+
+    <!-- ============================= -->
+    <!-- COLLAPSIBLE SECTION STYLES -->
+    <!-- ============================= -->
+    <style>
+        .collapse-header {
+            background: #0d2a4d;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 12px;
+            user-select: none;
+        }
+        .collapse-header:hover {
+            background: #163a63;
+        }
+        .collapse-content {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s ease;
+            background: #ffffff10;
+            padding: 0 12px;
+            border-left: 3px solid #0d2a4d;
+            border-right: 3px solid #0d2a4d;
+            border-bottom: 3px solid #0d2a4d;
+            border-radius: 0 0 6px 6px;
+        }
+        .collapse-content.open {
+            padding: 12px;
+        }
+    </style>
+
+    <!-- ============================= -->
+    <!-- SECTION 1 — REFRIGERANT SELECTION (OPEN) -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="refSelect">
+        1. Refrigerant Selection
+    </div>
+    <div id="refSelect" class="collapse-content" style="max-height: 500px;">
+        <label>Select Refrigerant</label>
+        <select id="refType">
+            <option value="R12">R‑12</option>
+            <option value="R22">R‑22</option>
+            <option value="R502">R‑502</option>
+            <option value="R410A">R‑410A</option>
+            <option value="R32">R‑32</option>
+            <option value="R454B">R‑454B</option>
+            <option value="R452B">R‑452B</option>
+            <option value="R407C">R‑407C</option>
+            <option value="R134A">R‑134a</option>
+            <option value="R404A">R‑404A</option>
+            <option value="R507A">R‑507A</option>
+            <option value="R513A">R‑513A</option>
+            <option value="R448A">R‑448A (N40)</option>
+            <option value="R449A">R‑449A (XP40)</option>
+            <option value="R450A">R‑450A</option>
+            <option value="R1234YF">R‑1234yf</option>
+            <option value="R1234ZE">R‑1234ze</option>
+            <option value="R290">R‑290 (Propane)</option>
+            <option value="R600A">R‑600a (Isobutane)</option>
+            <option value="R717">R‑717 (Ammonia)</option>
+            <option value="R744">R‑744 (CO₂)</option>
+            <option value="R438A">R‑438A (MO99)</option>
+            <option value="R427A">R‑427A</option>
+            <option value="R422B">R‑422B</option>
+            <option value="R421A">R‑421A</option>
+            <option value="R407A">R‑407A</option>
+        </select>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION 2 — TEMP → PRESSURE -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="tempToPress">
+        2. Saturation Pressure Lookup (Temp → Pressure)
+    </div>
+    <div id="tempToPress" class="collapse-content">
+        <label>Evaporator Temperature (°F)</label>
+        <input type="number" id="evapTemp">
+
+        <label>Condenser Temperature (°F)</label>
+        <input type="number" id="condTemp">
+
+        <button onclick="calcTempToPressure()">Calculate Pressures</button>
+
+        <h3>Results:</h3>
+        <pre id="tempToPressResult"></pre>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION 3 — PRESSURE → TEMP -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="pressToTemp">
+        3. Saturation Temperature Lookup (Pressure → Temp)
+    </div>
+    <div id="pressToTemp" class="collapse-content">
+        <label>Suction Pressure (PSIG)</label>
+        <input type="number" id="suctionPSI">
+
+        <label>Liquid Pressure (PSIG)</label>
+        <input type="number" id="liquidPSI">
+
+        <button onclick="calcPressureToTemp()">Calculate Temperatures</button>
+
+        <h3>Results:</h3>
+        <pre id="pressToTempResult"></pre>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION 4 — SUPERHEAT -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="superheat">
+        4. Superheat Calculator
+    </div>
+    <div id="superheat" class="collapse-content">
+        <label>Suction Pressure (PSIG)</label>
+        <input type="number" id="shSuction">
+
+        <label>Suction Line Temperature (°F)</label>
+        <input type="number" id="shTemp">
+
+        <button onclick="calcSuperheat()">Calculate Superheat</button>
+
+        <h3>Results:</h3>
+        <pre id="superheatResult"></pre>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION 5 — SUBCOOLING -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="subcool">
+        5. Subcooling Calculator
+    </div>
+    <div id="subcool" class="collapse-content">
+        <label>Liquid Pressure (PSIG)</label>
+        <input type="number" id="scLiquid">
+
+        <label>Liquid Line Temperature (°F)</label>
+        <input type="number" id="scTemp">
+
+        <button onclick="calcSubcooling()">Calculate Subcooling</button>
+
+        <h3>Results:</h3>
+        <pre id="subcoolResult"></pre>
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION 6 — SUMMARY -->
+    <!-- ============================= -->
+    <div class="collapse-header" data-target="summary">
+        6. Full Summary
+    </div>
+    <div id="summary" class="collapse-content">
+        <pre id="summaryOutput">Run any calculation to populate summary.</pre>
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- COLLAPSIBLE LOGIC (ANIMATION HOOKS ONLY) -->
+<!-- ============================= -->
+<script>
+document.querySelectorAll('.collapse-header').forEach(header => {
+    header.addEventListener('click', () => {
+        const targetId = header.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+
+        if (content.style.maxHeight && content.style.maxHeight !== "0px") {
+            content.style.maxHeight = "0px";
+            content.classList.remove("open");
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            content.classList.add("open");
+        }
+    });
+});
+</script>
+/* ============================================================
+   R2 — PT DATA + INTERPOLATION ENGINE
+   ============================================================ */
+
+/* 
+   Each refrigerant gets a compact PT table.
+   Temperatures are in °F.
+   Pressures are in PSIG.
+   These are anchor points — interpolation fills the gaps.
+*/
+
+const PT_DATA = {
+    "R22": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [7, 12, 18, 26, 35, 47, 62, 80, 102, 128, 160]
+    },
+    "R410A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [18, 28, 41, 58, 80, 110, 150, 200, 260, 330, 420]
+    },
+    "R32": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [25, 36, 50, 68, 92, 125, 170, 225, 295, 380, 480]
+    },
+    "R454B": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [15, 23, 33, 47, 65, 90, 120, 160, 210, 270, 340]
+    },
+    "R407C": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [10, 16, 23, 32, 44, 60, 80, 105, 135, 170, 210]
+    },
+    "R134A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [1, 3, 5, 8, 12, 18, 26, 36, 48, 63, 82]
+    },
+    "R404A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [5, 9, 14, 21, 30, 42, 58, 78, 103, 135, 175]
+    },
+    "R507A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [6, 10, 15, 22, 32, 45, 62, 83, 110, 145, 185]
+    },
+    "R513A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [2, 4, 6, 9, 14, 20, 28, 38, 50, 65, 84]
+    },
+    "R448A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [7, 12, 18, 26, 36, 50, 68, 90, 118, 152, 195]
+    },
+    "R449A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [7, 12, 18, 26, 36, 50, 68, 90, 118, 152, 195]
+    },
+    "R450A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [1, 3, 5, 8, 12, 18, 26, 36, 48, 63, 82]
+    },
+    "R1234YF": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [1, 2, 4, 6, 9, 14, 20, 28, 38, 50, 65]
+    },
+    "R1234ZE": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [0, 1, 2, 3, 5, 8, 12, 17, 23, 31, 41]
+    },
+    "R290": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [5, 8, 12, 18, 26, 37, 52, 70, 93, 122, 158]
+    },
+    "R600A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [0, 1, 1, 2, 3, 5, 7, 10, 14, 19, 25]
+    },
+    "R717": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [-14, -10, -6, -2, 3, 10, 18, 28, 40, 55, 72]
+    },
+    "R744": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [70, 90, 115, 145, 180, 225, 280, 350, 440, 560, 720]
+    },
+    "R438A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [8, 13, 19, 27, 38, 52, 70, 92, 120, 155, 198]
+    },
+    "R427A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [9, 14, 20, 29, 40, 55, 74, 98, 128, 165, 210]
+    },
+    "R422B": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [8, 13, 19, 27, 38, 52, 70, 92, 120, 155, 198]
+    },
+    "R421A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [7, 12, 18, 26, 36, 50, 68, 90, 118, 152, 195]
+    },
+    "R407A": {
+        temps: [-40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60],
+        press: [10, 16, 23, 32, 44, 60, 80, 105, 135, 170, 210]
+    }
+};
+
+/* ============================================================
+   INTERPOLATION — TEMP → PRESSURE
+   ============================================================ */
+function interpolateTempToPressure(ref, tempF) {
+    const data = PT_DATA[ref];
+    const T = data.temps;
+    const P = data.press;
+
+    if (tempF <= T[0]) return P[0];
+    if (tempF >= T[T.length - 1]) return P[P.length - 1];
+
+    for (let i = 0; i < T.length - 1; i++) {
+        if (tempF >= T[i] && tempF <= T[i + 1]) {
+            const ratio = (tempF - T[i]) / (T[i + 1] - T[i]);
+            return P[i] + ratio * (P[i + 1] - P[i]);
+        }
+    }
+}
+
+/* ============================================================
+   REVERSE INTERPOLATION — PRESSURE → TEMP
+   ============================================================ */
+function interpolatePressureToTemp(ref, psi) {
+    const data = PT_DATA[ref];
+    const T = data.temps;
+    const P = data.press;
+
+    if (psi <= P[0]) return T[0];
+    if (psi >= P[P.length - 1]) return T[T.length - 1];
+
+    for (let i = 0; i < P.length - 1; i++) {
+        if (psi >= P[i] && psi <= P[i + 1]) {
+            const ratio = (psi - P[i]) / (P[i + 1] - P[i]);
+            return T[i] + ratio * (T[i + 1] - T[i]);
+        }
+    }
+}
+
+/* ============================================================
+   R3 — FULL REFRIGERATION LOGIC + UI INTEGRATION
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. TEMP → PRESSURE
+   ------------------------------------------------------------ */
+function calcTempToPressure() {
+    const ref = document.getElementById("refType").value;
+    const evapT = parseFloat(document.getElementById("evapTemp").value);
+    const condT = parseFloat(document.getElementById("condTemp").value);
+
+    let out = "";
+
+    if (!isNaN(evapT)) {
+        const evapP = interpolateTempToPressure(ref, evapT);
+        out += `Evaporator Pressure: ${evapP.toFixed(1)} PSIG\n`;
+        last_evapP = evapP;
+    }
+
+    if (!isNaN(condT)) {
+        const condP = interpolateTempToPressure(ref, condT);
+        out += `Condenser Pressure: ${condP.toFixed(1)} PSIG\n`;
+        last_condP = condP;
+    }
+
+    if (out === "") out = "Enter at least one temperature.";
+
+    document.getElementById("tempToPressResult").innerText = out;
+    updateSummary();
+}
+
+/* ------------------------------------------------------------
+   2. PRESSURE → TEMP
+   ------------------------------------------------------------ */
+function calcPressureToTemp() {
+    const ref = document.getElementById("refType").value;
+    const sucP = parseFloat(document.getElementById("suctionPSI").value);
+    const liqP = parseFloat(document.getElementById("liquidPSI").value);
+
+    let out = "";
+
+    if (!isNaN(sucP)) {
+        const evapT = interpolatePressureToTemp(ref, sucP);
+        out += `Evaporator Saturation Temp: ${evapT.toFixed(1)} °F\n`;
+        last_evapT = evapT;
+    }
+
+    if (!isNaN(liqP)) {
+        const condT = interpolatePressureToTemp(ref, liqP);
+        out += `Condenser Saturation Temp: ${condT.toFixed(1)} °F\n`;
+        last_condT = condT;
+    }
+
+    if (out === "") out = "Enter at least one pressure.";
+
+    document.getElementById("pressToTempResult").innerText = out;
+    updateSummary();
+}
+
+/* ------------------------------------------------------------
+   3. SUPERHEAT
+   ------------------------------------------------------------ */
+function calcSuperheat() {
+    const ref = document.getElementById("refType").value;
+    const sucP = parseFloat(document.getElementById("shSuction").value);
+    const lineT = parseFloat(document.getElementById("shTemp").value);
+
+    if (isNaN(sucP) || isNaN(lineT)) {
+        document.getElementById("superheatResult").innerText =
+            "Enter suction pressure and suction line temperature.";
+        return;
+    }
+
+    const satT = interpolatePressureToTemp(ref, sucP);
+    const SH = lineT - satT;
+
+    last_evapT = satT;
+    last_SH = SH;
+
+    document.getElementById("superheatResult").innerText =
+        `Saturation Temp: ${satT.toFixed(1)} °F\n` +
+        `Superheat: ${SH.toFixed(1)} °F`;
+
+    updateSummary();
+}
+
+/* ------------------------------------------------------------
+   4. SUBCOOLING
+   ------------------------------------------------------------ */
+function calcSubcooling() {
+    const ref = document.getElementById("refType").value;
+    const liqP = parseFloat(document.getElementById("scLiquid").value);
+    const lineT = parseFloat(document.getElementById("scTemp").value);
+
+    if (isNaN(liqP) || isNaN(lineT)) {
+        document.getElementById("subcoolResult").innerText =
+            "Enter liquid pressure and liquid line temperature.";
+        return;
+    }
+
+    const satT = interpolatePressureToTemp(ref, liqP);
+    const SC = satT - lineT;
+
+    last_condT = satT;
+    last_SC = SC;
+
+    document.getElementById("subcoolResult").innerText =
+        `Saturation Temp: ${satT.toFixed(1)} °F\n` +
+        `Subcooling: ${SC.toFixed(1)} °F`;
+
+    updateSummary();
+}
+
+/* ------------------------------------------------------------
+   5. SUMMARY BUILDER
+   ------------------------------------------------------------ */
+let last_evapT = null;
+let last_condT = null;
+let last_evapP = null;
+let last_condP = null;
+let last_SH = null;
+let last_SC = null;
+
+function updateSummary() {
+    const ref = document.getElementById("refType").value;
+
+    let out = `Refrigerant: ${ref}\n\n`;
+
+    if (last_evapT !== null) out += `Evap Sat Temp: ${last_evapT.toFixed(1)} °F\n`;
+    if (last_evapP !== null) out += `Evap Pressure: ${last_evapP.toFixed(1)} PSIG\n`;
+
+    if (last_condT !== null) out += `Cond Sat Temp: ${last_condT.toFixed(1)} °F\n`;
+    if (last_condP !== null) out += `Cond Pressure: ${last_condP.toFixed(1)} PSIG\n`;
+
+    if (last_SH !== null) out += `Superheat: ${last_SH.toFixed(1)} °F\n`;
+    if (last_SC !== null) out += `Subcooling: ${last_SC.toFixed(1)} °F\n`;
+
+    document.getElementById("summaryOutput").innerText = out;
+}
