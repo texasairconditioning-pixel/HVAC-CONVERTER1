@@ -1,50 +1,56 @@
-<script>
-// Tab switching - aggressive local-file friendly version
-function openTab(tabId) {
-  // Hide everything
-  document.querySelectorAll('.tab-section').forEach(function(el) {
-    el.style.display = 'none';
-  });
-  // Remove active class from buttons
-  document.querySelectorAll('.tab-buttons button').forEach(function(btn) {
-    btn.classList.remove('active');
-  });
+# unit_converter.py
+# A simple Python script for common engineering unit conversions.
+# This can be expanded with more conversions as needed.
+# Usage: python unit_converter.py --type <conversion_type> --value <value>
+# Example: python unit_converter.py --type mm_to_inches --value 25.4
 
-  // Show selected tab
-  var target = document.getElementById(tabId);
-  if (target) {
-    target.style.display = 'block';
-  }
+import argparse
 
-  // Highlight button
-  var btn = document.querySelector('button[data-tab="' + tabId + '"]');
-  if (btn) {
-    btn.classList.add('active');
-  }
+def cmh_to_cfm(cmh):
+    """Convert cubic meters per hour (CMH) to cubic feet per minute (CFM)."""
+    return cmh * 0.58858
+
+def mm_to_inches(mm):
+    """Convert millimeters (mm) to inches."""
+    return mm / 25.4
+
+def kw_to_btuh(kw):
+    """Convert kilowatts (kW) to BTU per hour (BTUH)."""
+    return kw * 3412.142
+
+def celsius_to_fahrenheit(c):
+    """Convert Celsius to Fahrenheit (optional additional conversion)."""
+    return (c * 9/5) + 32
+
+def meters_to_feet(m):
+    """Convert meters to feet (optional additional conversion)."""
+    return m * 3.28084
+
+def pa_to_psi(pa):
+    """Convert Pascals (Pa) to pounds per square inch (PSI) (optional)."""
+    return pa * 0.000145038
+
+# Dictionary of available conversions
+conversions = {
+    'cmh_to_cfm': cmh_to_cfm,
+    'mm_to_inches': mm_to_inches,
+    'kw_to_btuh': kw_to_btuh,
+    'celsius_to_fahrenheit': celsius_to_fahrenheit,
+    'meters_to_feet': meters_to_feet,
+    'pa_to_psi': pa_to_psi,
 }
 
-// Setup tabs as soon as possible
-function init() {
-  // Attach click listeners
-  var buttons = document.querySelectorAll('.tab-buttons button');
-  for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', function() {
-      var tabId = this.getAttribute('data-tab');
-      openTab(tabId);
-    });
-  }
+def main():
+    parser = argparse.ArgumentParser(description="Engineering Unit Converter")
+    parser.add_argument('--type', required=True, choices=conversions.keys(), help="Type of conversion")
+    parser.add_argument('--value', required=True, type=float, help="Value to convert")
+    
+    args = parser.parse_args()
+    
+    converter = conversions[args.type]
+    result = converter(args.value)
+    
+    print(f"{args.value} {args.type.split('_to_')[0]} = {result:.4f} {args.type.split('_to_')[1]}")
 
-  // Show default tab
-  openTab('tab-refrig');
-}
-
-// Run now if DOM is already ready, otherwise wait
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  setTimeout(init, 1);  // tiny delay helps on file://
-} else {
-  document.addEventListener('DOMContentLoaded', init);
-}
-
-// Extra fallback (some browsers need this on file://)
-setTimeout(init, 500);
-</script>
+if __name__ == "__main__":
+    main()
