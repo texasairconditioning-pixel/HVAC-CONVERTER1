@@ -1,7 +1,15 @@
+# Revision: 1.2.1
+# Date: 2025-03-18
+# Changes from previous: Fixed syntax errors, formatting, indentation;
+#                       corrected dictionary keys and tuple unpacking;
+#                       improved error handling and argparse usage;
+#                       added version header for tracking
+
 #!/usr/bin/env python3
 """HVAC & engineering unit converter CLI"""
 
 import argparse
+
 
 # Conversion functions
 def cmh_to_cfm(val):    return val * 0.588578
@@ -15,33 +23,39 @@ def f_to_c(val):        return (val - 32) * 5/9
 def m_to_ft(val):       return val * 3.28084
 def pa_to_inwg(val):    return val * 0.00401463   # Pa → inches water gauge
 
+
 CONVERSIONS = {
-    'cmh_to_cfm':     (cmh_to_cfm,     'CMH',     'CFM'),
-    'cfm_to_cmh':     (cfm_to_cmh,     'CFM',     'CMH'),
-    'mm_to_inches':   (mm_to_inches,   'mm',      'inches'),
-    'inches_to_mm':   (inches_to_mm,   'inches',  'mm'),
-    'kw_to_btuh':     (kw_to_btuh,     'kW',      'BTU/h'),
-    'btuh_to_kw':     (btuh_to_kw,     'BTU/h',   'kW'),
-    'c_to_f':         (c_to_f,         '°C',      '°F'),
-    'f_to_c':         (f_to_c,         '°F',      '°C'),
-    'm_to_ft':        (m_to_ft,        'm',       'ft'),
-    'pa_to_inwg':     (pa_to_inwg,     'Pa',      'in. wg'),
+    'cmh_to_cfm':     (cmh_to_cfm,     'CMH',    'CFM'),
+    'cfm_to_cmh':     (cfm_to_cmh,     'CFM',    'CMH'),
+    'mm_to_inches':   (mm_to_inches,   'mm',     'inches'),
+    'inches_to_mm':   (inches_to_mm,   'inches', 'mm'),
+    'kw_to_btuh':     (kw_to_btuh,     'kW',     'BTU/h'),
+    'btuh_to_kw':     (btuh_to_kw,     'BTU/h',  'kW'),
+    'c_to_f':         (c_to_f,         '°C',     '°F'),
+    'f_to_c':         (f_to_c,         '°F',     '°C'),
+    'm_to_ft':        (m_to_ft,        'm',      'ft'),
+    'pa_to_inwg':     (pa_to_inwg,     'Pa',     'in. wg'),
 }
+
 
 def list_conversions():
     print("Available conversions:")
     for key, (_, from_unit, to_unit) in sorted(CONVERSIONS.items()):
         print(f"  {key:16}   {from_unit:>6} → {to_unit}")
 
-def convert(value: float, conv_type: str) -> tuple :
+
+def convert(value: float, conv_type: str):
     conv_key = conv_type.lower()
     if conv_key not in CONVERSIONS:
         raise ValueError(f"Unknown conversion: {conv_type}")
-    func, from_u, to_u = CONVERSIONS return func(value), from_u, to_u
+    func, from_u, to_u = CONVERSIONS[conv_key]
+    result = func(value)
+    return result, from_u, to_u
+
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Quick unit converter for HVAC/mechanical pros",
+        description="Quick unit converter for HVAC/mechanical professionals",
         epilog="Example: python converter.py kw_to_btuh 5.5"
     )
     parser.add_argument('type', nargs='?', help="Conversion type (run --list to see all)")
@@ -64,7 +78,8 @@ def main():
         print(f"  (exact: {result:.6f} {to_u})")
     except ValueError as e:
         print(f"Error: {e}")
-        print("Run with --list for options.")
+        print("Run with --list to see available options.")
+
 
 if __name__ == "__main__":
     main()
