@@ -3,28 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HVAC Unit Converter</title>
+  <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
+  
+  <!-- PWA setup -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
   
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; background: #f9f9f9; color: #222; }
-    h1 { color: #1e90ff; text-align: center; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      max-width: 800px; 
+      margin: 2rem auto; 
+      padding: 1rem; 
+      background: #f9f9f9; 
+      color: #222; 
+      line-height: 1.6; 
+    }
+    h1 { color: #1e90ff; text-align: center; margin: 0 0 10px; }
+    .logo { max-width: 220px; display: block; margin: 0 auto 20px; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .contact { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
     .calculator { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
-    button { background: #1e90ff; color: white; border: none; font-weight: bold; }
+    button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
     #result { font-size: 1.5em; font-weight: bold; margin: 15px 0; color: #1e90ff; text-align: center; }
     .copy-success { color: green; font-weight: bold; }
+    ul { padding-left: 1.2rem; }
   </style>
 </head>
 <body>
-  <h1>HVAC Unit Converter</h1>
-  <p><strong>Welcome to Global HVAC Solutions LLC</strong></p>
 
+  <!-- Global HVAC Logo + Header -->
+  <div class="header">
+    <img src="icon.png" alt="Global HVAC Solutions LLC" class="logo">
+    <h1>Global HVAC Solutions LLC</h1>
+    <p><strong>Commercial • Industrial • Marine & Offshore</strong><br>
+       Service • Sales • Parts</p>
+  </div>
+
+  <!-- Contact Information -->
+  <div class="contact">
+    <h2>📞 Contact Us</h2>
+    <p><strong>Jeff Lee</strong><br>
+       Phone: <a href="tel:4097490650">409-749-0650</a><br>
+       Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
+  </div>
+
+  <!-- Interactive Calculator -->
   <div class="calculator">
-    <h2>🔢 Interactive Calculator</h2>
+    <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
       <option value="">— Select conversion —</option>
       <option value="cmh_to_cfm">CMH → CFM</option>
@@ -44,11 +73,13 @@
     <div id="result"></div>
   </div>
 
-  <h2>📱 iPhone Tip</h2>
-  <p>Install <strong>a-Shell</strong> (free) if you still want the command-line version.</p>
+  <!-- iPhone / Mobile Tip -->
+  <h2>📱 iPhone / Mobile Tip</h2>
+  <p>Install <strong>a-Shell</strong> (free on App Store) if you still want the command-line version.</p>
 
+  <!-- Full Python Script -->
   <h2>📋 Full Python Script (Copy & Paste)</h2>
-  <pre id="python-code"># Revision: 1.5.1
+  <pre id="python-code"># Revision: 1.6.0
 #!/usr/bin/env python3
 """HVAC & engineering unit converter CLI"""
 
@@ -110,7 +141,7 @@ if __name__ == "__main__": main()
   <button onclick="copyScript()">📋 Copy Full Script</button>
   <span id="copy-status" class="copy-success"></span>
 
-  <p><small>Revision 1.5.1 • Interactive calculator + copy button fixed • Global HVAC Solutions LLC</small></p>
+  <p><small>Revision 1.6.0 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650 • Commercial • Industrial • Marine & Offshore</small></p>
 
   <script>
     const convs = {
