@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
   
-  <!-- PWA – installs with your logo on iPhone -->
+  <!-- PWA – installs with your logo -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
@@ -16,7 +16,7 @@
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
     .header { text-align: center; margin-bottom: 2rem; }
     .contact, .calculator { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .install { background: #1e90ff; color: white; padding: 20px; border-radius: 12px; text-align: center; font-size: 1.2em; margin: 20px 0; }
+    .install { background: #1e90ff; color: white; padding: 25px; border-radius: 12px; text-align: center; font-size: 1.25em; margin: 20px 0; line-height: 1.5; }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
     button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
@@ -41,16 +41,16 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- BIG Install Banner – this is what makes "Add to Home Screen" work -->
+  <!-- BIG Install Banner -->
   <div class="install">
-    <strong>📱 Add to iPhone Home Screen (takes 5 seconds)</strong><br><br>
-    1. Tap the Share button (square with arrow) at the bottom<br>
+    <strong>📱 Add to iPhone Home Screen (5 seconds)</strong><br><br>
+    1. Tap the Share button (square with ↑ arrow) at the bottom of Safari<br>
     2. Scroll down and tap <strong>“Add to Home Screen”</strong><br>
     3. Tap Add<br><br>
-    It will appear on your home screen with the Global HVAC logo!
+    It will install as a real app with the Global HVAC logo!
   </div>
 
-  <!-- Interactive Calculator (16 conversions) -->
+  <!-- Calculator – now 24 conversions -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -59,18 +59,26 @@
       <option value="cfm_to_cmh">CFM → CMH</option>
       <option value="cfm_to_m3h">CFM → m³/h</option>
       <option value="m3h_to_cfm">m³/h → CFM</option>
+      <option value="cfm_to_ls">CFM → L/s</option>
+      <option value="ls_to_cfm">L/s → CFM</option>
       <option value="mm_to_inches">mm → inches</option>
       <option value="inches_to_mm">inches → mm</option>
       <option value="kw_to_btuh">kW → BTU/h</option>
       <option value="btuh_to_kw">BTU/h → kW</option>
-      <option value="btuh_to_tons">BTU/h → Tons refrigeration</option>
+      <option value="kw_to_tons">kW → Tons refrigeration</option>
+      <option value="tons_to_kw">Tons → kW</option>
+      <option value="btuh_to_tons">BTU/h → Tons</option>
       <option value="tons_to_btuh">Tons → BTU/h</option>
       <option value="c_to_f">°C → °F</option>
       <option value="f_to_c">°F → °C</option>
       <option value="m_to_ft">m → ft</option>
       <option value="pa_to_inwg">Pa → in. wg</option>
+      <option value="pa_to_mmwg">Pa → mm wg</option>
+      <option value="mmwg_to_pa">mm wg → Pa</option>
       <option value="pa_to_psi">Pa → psi</option>
       <option value="inwg_to_psi">in. wg → psi</option>
+      <option value="inwg_to_mmwg">in. wg → mm wg</option>
+      <option value="ms_to_fpm">m/s → fpm</option>
     </select>
     <input type="number" id="value" placeholder="Enter value" step="any">
     <button onclick="calculate()">Calculate</button>
@@ -78,7 +86,7 @@
     <div id="result"></div>
   </div>
 
-  <p><small>Revision 1.6.2 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 1.6.3 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <script>
     const convs = {
@@ -86,18 +94,26 @@
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
       'cfm_to_m3h': {fn: v=>v*1.69901, from:'CFM', to:'m³/h'},
       'm3h_to_cfm': {fn: v=>v/1.69901, from:'m³/h', to:'CFM'},
+      'cfm_to_ls': {fn: v=>v*0.471947, from:'CFM', to:'L/s'},
+      'ls_to_cfm': {fn: v=>v/0.471947, from:'L/s', to:'CFM'},
       'mm_to_inches': {fn: v=>v/25.4, from:'mm', to:'inches'},
       'inches_to_mm': {fn: v=>v*25.4, from:'inches', to:'mm'},
       'kw_to_btuh': {fn: v=>v*3412.142, from:'kW', to:'BTU/h'},
       'btuh_to_kw': {fn: v=>v/3412.142, from:'BTU/h', to:'kW'},
+      'kw_to_tons': {fn: v=>v/3.51685, from:'kW', to:'Tons'},
+      'tons_to_kw': {fn: v=>v*3.51685, from:'Tons', to:'kW'},
       'btuh_to_tons': {fn: v=>v/12000, from:'BTU/h', to:'Tons'},
       'tons_to_btuh': {fn: v=>v*12000, from:'Tons', to:'BTU/h'},
       'c_to_f': {fn: v=>v*9/5+32, from:'°C', to:'°F'},
       'f_to_c': {fn: v=>(v-32)*5/9, from:'°F', to:'°C'},
       'm_to_ft': {fn: v=>v*3.28084, from:'m', to:'ft'},
       'pa_to_inwg': {fn: v=>v*0.00401463, from:'Pa', to:'in. wg'},
+      'pa_to_mmwg': {fn: v=>v/9.80665, from:'Pa', to:'mm wg'},
+      'mmwg_to_pa': {fn: v=>v*9.80665, from:'mm wg', to:'Pa'},
       'pa_to_psi': {fn: v=>v/6894.76, from:'Pa', to:'psi'},
-      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'}
+      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'},
+      'inwg_to_mmwg': {fn: v=>v*25.4, from:'in. wg', to:'mm wg'},
+      'ms_to_fpm': {fn: v=>v*196.85, from:'m/s', to:'fpm'}
     };
 
     function calculate() {
