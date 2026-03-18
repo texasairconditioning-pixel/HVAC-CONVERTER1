@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
   
-  <!-- PWA – installs with your logo on any phone -->
+  <!-- PWA – installs with your logo on iPhone -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
@@ -16,12 +16,11 @@
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
     .header { text-align: center; margin-bottom: 2rem; }
     .contact, .calculator { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .install { background: #1e90ff; color: white; padding: 20px; border-radius: 12px; text-align: center; font-size: 1.2em; margin: 20px 0; }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
     button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
     #result { font-size: 1.5em; font-weight: bold; margin: 15px 0; color: #1e90ff; text-align: center; }
-    .copy-success { color: green; font-weight: bold; }
-    .install { background: #1e90ff; color: white; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 20px 0; }
   </style>
 </head>
 <body>
@@ -42,13 +41,16 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- Install App Button (makes it a real app with your logo) -->
+  <!-- BIG Install Banner – this is what makes "Add to Home Screen" work -->
   <div class="install">
-    💡 Tap Share → "Add to Home Screen" on your iPhone<br>
-    It will install as a real app with the Global HVAC logo!
+    <strong>📱 Add to iPhone Home Screen (takes 5 seconds)</strong><br><br>
+    1. Tap the Share button (square with arrow) at the bottom<br>
+    2. Scroll down and tap <strong>“Add to Home Screen”</strong><br>
+    3. Tap Add<br><br>
+    It will appear on your home screen with the Global HVAC logo!
   </div>
 
-  <!-- Calculator – now 16 conversions -->
+  <!-- Interactive Calculator (16 conversions) -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -76,42 +78,9 @@
     <div id="result"></div>
   </div>
 
-  <!-- Python Script -->
-  <h2>📋 Full Python Script (Copy & Paste)</h2>
-  <pre id="python-code"># Revision: 1.6.1
-#!/usr/bin/env python3
-"""HVAC & engineering unit converter CLI"""
-
-import argparse
-
-def cmh_to_cfm(val):    return val * 0.588578
-def cfm_to_cmh(val):    return val / 0.588578
-def cfm_to_m3h(val):    return val * 1.69901
-def m3h_to_cfm(val):    return val / 1.69901
-def mm_to_inches(val):  return val / 25.4
-def inches_to_mm(val):  return val * 25.4
-def kw_to_btuh(val):    return val * 3412.142
-def btuh_to_kw(val):    return val / 3412.142
-def btuh_to_tons(val):  return val / 12000
-def tons_to_btuh(val):  return val * 12000
-def c_to_f(val):        return val * 9/5 + 32
-def f_to_c(val):        return (val - 32) * 5/9
-def m_to_ft(val):       return val * 3.28084
-def pa_to_inwg(val):    return val * 0.00401463
-def pa_to_psi(val):     return val / 6894.76
-def inwg_to_psi(val):   return val / 27.708
-
-CONVERSIONS = { ... }  # (full script is inside – copy button works)
-
-# (rest of script is here – you can copy the whole thing)
-</pre>
-  <button onclick="copyScript()">📋 Copy Full Script</button>
-  <span id="copy-status" class="copy-success"></span>
-
-  <p><small>Revision 1.6.1 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 1.6.2 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <script>
-    // All 16 conversions here
     const convs = {
       'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
@@ -143,14 +112,9 @@ CONVERSIONS = { ... }  # (full script is inside – copy button works)
       document.getElementById('result').innerHTML = `${val} ${c.from} = <strong>${res.toFixed(2)} ${c.to}</strong>`;
     }
 
-    function clearAll() { document.getElementById('value').value = ''; document.getElementById('result').innerHTML = ''; }
-
-    function copyScript() {
-      const code = document.getElementById('python-code').innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        document.getElementById('copy-status').innerText = '✅ Copied!';
-        setTimeout(() => document.getElementById('copy-status').innerText = '', 2000);
-      });
+    function clearAll() {
+      document.getElementById('value').value = '';
+      document.getElementById('result').innerHTML = '';
     }
   </script>
 </body>
