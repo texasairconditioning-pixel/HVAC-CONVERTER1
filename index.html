@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HVAC Converter</title>
+  <title>HVAC Unit Converter</title>
   
   <!-- PWA setup -->
   <link rel="manifest" href="/manifest.json">
@@ -14,8 +14,10 @@
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; line-height: 1.6; background: #f9f9f9; color: #222; }
     h1 { color: #1e90ff; text-align: center; }
     h2 { margin-top: 2rem; }
-    pre { background: #fff; padding: 1rem; border-radius: 8px; overflow-x: auto; border: 1px solid #ddd; }
-    a { color: #1e90ff; font-weight: 500; }
+    pre { background: #fff; padding: 1rem; border-radius: 8px; overflow-x: auto; border: 1px solid #ddd; font-family: monospace; }
+    button { background: #1e90ff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0066cc; }
+    .copy-success { color: green; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -23,24 +25,94 @@
   
   <p><strong>Welcome to Global HVAC Solutions LLC</strong> — your quick engineering unit converter (CMH↔CFM, kW↔BTU/h, °C↔°F, Pa↔in. wg, and more).</p>
 
-  <h2>📥 Download the Python Script</h2>
-  <p><a href="https://raw.githubusercontent.com/texasairconditioning-pixel/HVAC-CONVERTER1/main/converter.py" target="_blank">⬇️ Download converter.py (right-click → Save Link As)</a></p>
-
-  <h2>🚀 Quick Usage Example</h2>
-  <pre><code>python converter.py kw_to_btuh 5.5
-# Output: 5.5 kW = 18,766.78 BTU/h</code></pre>
-
   <h2>📱 iPhone / Mobile Tip</h2>
   <p>Install <strong>a-Shell</strong> (free on App Store), then run:</p>
   <pre><code>curl -O https://raw.githubusercontent.com/texasairconditioning-pixel/HVAC-CONVERTER1/main/converter.py
 python3 converter.py --list</code></pre>
 
-  <p><small>Revision 1.3.3 • Made with ❤️ for Global HVAC Solutions LLC</small></p>
+  <h2>📋 Full Python Script (Copy & Paste)</h2>
+  <p>Just copy the code below and save it as <code>converter.py</code> on your phone or computer.</p>
+  <pre id="python-code"># Revision: 1.4.0
+#!/usr/bin/env python3
+"""HVAC & engineering unit converter CLI"""
 
-  <!-- PWA service worker -->
+import argparse
+
+# Conversion functions
+def cmh_to_cfm(val):    return val * 0.588578
+def cfm_to_cmh(val):    return val / 0.588578
+def mm_to_inches(val):  return val / 25.4
+def inches_to_mm(val):  return val * 25.4
+def kw_to_btuh(val):    return val * 3412.142
+def btuh_to_kw(val):    return val / 3412.142
+def c_to_f(val):        return val * 9/5 + 32
+def f_to_c(val):        return (val - 32) * 5/9
+def m_to_ft(val):       return val * 3.28084
+def pa_to_inwg(val):    return val * 0.00401463
+
+CONVERSIONS = {
+    'cmh_to_cfm':     (cmh_to_cfm,     'CMH',    'CFM'),
+    'cfm_to_cmh':     (cfm_to_cmh,     'CFM',    'CMH'),
+    'mm_to_inches':   (mm_to_inches,   'mm',     'inches'),
+    'inches_to_mm':   (inches_to_mm,   'inches', 'mm'),
+    'kw_to_btuh':     (kw_to_btuh,     'kW',     'BTU/h'),
+    'btuh_to_kw':     (btuh_to_kw,     'BTU/h',  'kW'),
+    'c_to_f':         (c_to_f,         '°C',     '°F'),
+    'f_to_c':         (f_to_c,         '°F',     '°C'),
+    'm_to_ft':        (m_to_ft,        'm',      'ft'),
+    'pa_to_inwg':     (pa_to_inwg,     'Pa',     'in. wg'),
+}
+
+def list_conversions():
+    print("Available conversions:")
+    for key, (_, from_unit, to_unit) in sorted(CONVERSIONS.items()):
+        print(f"  {key:16}   {from_unit:>6} → {to_unit}")
+
+def convert(value, conv_type):
+    conv_key = conv_type.lower()
+    if conv_key not in CONVERSIONS:
+        raise ValueError(f"Unknown conversion: {conv_type}")
+    func, from_u, to_u = CONVERSIONS[conv_key]
+    result = func(value)
+    return result, from_u, to_u
+
+def main():
+    parser = argparse.ArgumentParser(description="Quick unit converter for HVAC/mechanical professionals")
+    parser.add_argument('type', nargs='?', help="Conversion type")
+    parser.add_argument('value', nargs='?', type=float, help="Value to convert")
+    parser.add_argument('--list', action='store_true', help="List all conversions")
+
+    args = parser.parse_args()
+
+    if args.list:
+        list_conversions()
+        return
+    if not args.type or args.value is None:
+        parser.print_help()
+        return
+
+    try:
+        result, from_u, to_u = convert(args.value, args.type)
+        print(f"{args.value:g} {from_u} = {result:,.2f} {to_u}")
+        print(f"  (exact: {result:.6f} {to_u})")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
+</pre>
+  <button onclick="copyCode()">📋 Copy Full Script</button>
+  <span id="copy-status" class="copy-success"></span>
+
+  <p><small>Revision 1.4.0 • Everything is now on this single page • Made with ❤️ for Global HVAC Solutions LLC</small></p>
+
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    function copyCode() {
+      const code = document.getElementById('python-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        document.getElementById('copy-status').innerText = '✅ Copied!';
+        setTimeout(() => document.getElementById('copy-status').innerText = '', 2000);
+      });
     }
   </script>
 </body>
