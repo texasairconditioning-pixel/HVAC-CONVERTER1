@@ -1,5 +1,5 @@
 {
-  "name": "HVAC Converter",
+  "name": "HVAC Unit Converter",
   "short_name": "HVAC",
   "start_url": "/",
   "display": "standalone",
@@ -7,7 +7,7 @@
   "theme_color": "#1e90ff",
   "icons": [
     {
-      "src": "Rounded HVAC logo ic.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
