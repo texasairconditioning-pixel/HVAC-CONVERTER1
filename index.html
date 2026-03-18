@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC Converter</title>
+  
+  <!-- PWA requirements -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#1e90ff">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      line-height: 1.6;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1 { color: #1e90ff; text-align: center; }
+    pre {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    a { color: #1e90ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>HVAC Unit Converter</h1>
+  
+  <p><strong>Welcome to Global HVAC Solutions LLC</strong> — your quick engineering unit converter (CMH↔CFM, kW↔BTU/h, °C↔°F, Pa↔in. wg, and more).</p>
+
+  <h2>📥 Download the Python Script</h2>
+  <p><a href="https://raw.githubusercontent.com/texasairconditioning-pixel/HVAC-converter/main/converter.py" target="_blank">⬇️ Download converter.py (right-click → Save Link As)</a></p>
+
+  <h2>🚀 Quick Usage Example</h2>
+  <pre><code>python converter.py kw_to_btuh 5.5
+# Output: 5.5 kW = 18,766.78 BTU/h</code></pre>
+
+  <h2>📱 iPhone / Mobile Tip</h2>
+  <p>Install <strong>a-Shell</strong> (free on App Store), then run:</p>
+  <pre><code>curl -O https://raw.githubusercontent.com/texasairconditioning-pixel/HVAC-converter/main/converter.py
+python3 converter.py --list</code></pre>
+
+  <p><small>Revision 1.2.1 • Made with ❤️ for Global HVAC Solutions LLC</small></p>
+
+  <!-- PWA service worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    }
+  </script>
+</body>
+</html>
