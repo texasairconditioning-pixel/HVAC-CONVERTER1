@@ -294,14 +294,16 @@
 
   <!-- Single bottom installation banner -->
   <div class="install">
-    <strong>📱 Add to iPhone Home Screen – Safari only</strong><br><br>
-    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
-    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
-    3. Tap <strong>Add</strong>.<br><br>
-    The app will use your Global HVAC logo.
+    <strong>📱 Add to Home Screen / Install App</strong><br><br>
+    Test installation:<br>
+    • In Safari: Share → “Add to Home Screen”<br>
+    • In Chrome (Android/desktop): Menu → “Install app”<br>
+    • In Edge: Address bar install icon<br><br>
+
+    The app will use your Global HVAC logo and work offline.
   </div>
 
-  <p><small>Revision 1.7.9 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 1.8.0 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <!-- Scripts -->
   <script>
@@ -327,7 +329,7 @@
       icon.textContent = document.body.dataset.theme === "dark" ? "☀️" : "🌙";
     }
 
-    // Calculator
+    // Calculator logic
     const convs = {
       'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
