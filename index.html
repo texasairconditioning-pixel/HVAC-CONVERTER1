@@ -4,21 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
-  
-  <!-- PWA configuration -->
+
+  <!-- Essential PWA meta tags – these make "Add to Home Screen" appear in Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#1e90ff">
+
+  <!-- Manifest link – make sure manifest.json exists in root -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
-  <meta name="theme-color" content="#1e90ff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  
+
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; background: #f9f9f9; color: #222; line-height: 1.6; }
     h1, h2 { color: #1e90ff; text-align: center; }
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
     .header { text-align: center; margin-bottom: 2rem; }
     .contact, .calculator, .news-splash, .metals { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .install { background: #1e90ff; color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.4em; margin: 30px 0; line-height: 1.5; font-weight: 600; }
+    .install { background: #1e90ff; color: white; padding: 35px 20px; border-radius: 12px; text-align: center; font-size: 1.45em; margin: 35px 0; line-height: 1.5; font-weight: 700; border: 3px solid #ffffff; }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
     button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
@@ -45,16 +48,17 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- Installation Instructions -->
+  <!-- Very prominent install banner – top position -->
   <div class="install">
-    <strong>📱 Add to iPhone Home Screen – Use Safari only</strong><br><br>
-    1. Tap the Share button (square with upward arrow) at the bottom of Safari.<br>
+    <strong>📱 IMPORTANT – Add to iPhone Home Screen (Safari only)</strong><br><br>
+    This page must be opened in <strong>Safari</strong> (not Chrome or other browsers).<br><br>
+    1. Tap the <strong>Share</strong> icon (square with upward arrow) at the bottom.<br>
     2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
     3. Tap <strong>Add</strong> in the top-right corner.<br><br>
-    The app will appear on your home screen with the Global HVAC logo.
+    → The app will appear on your home screen with the Global HVAC logo.
   </div>
 
-  <!-- Interactive Unit Converter -->
+  <!-- Calculator -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -90,21 +94,21 @@
     <div id="result"></div>
   </div>
 
-  <!-- News Splash – Restored -->
+  <!-- News Splash -->
   <div class="news-splash">
     <h2>📰 Today's Top News – March 18, 2026</h2>
     <div class="news-item">
-      <strong>Iran–Israel–U.S. Conflict (Day 19):</strong> Israel confirms assassination of Iran’s Intelligence Minister Esmaeil Khatib in Tehran. Iran retaliates with missile strikes on Qatar’s Ras Laffan LNG facility and Saudi energy infrastructure, causing significant damage and sharp oil price increases.
+      <strong>Iran–Israel–U.S. Conflict (Day 19):</strong> Israel confirms assassination of Iran’s Intelligence Minister Esmaeil Khatib in Tehran. Iran retaliates with missile strikes on Qatar’s Ras Laffan LNG facility and Saudi energy infrastructure.
     </div>
     <div class="news-item">
       <strong>Maritime & Shipping Impact:</strong> Strait of Hormuz remains high-risk; multiple LNG carriers and crude tankers rerouted around Africa. Seafarers stranded on vessels in danger zones. Marine war-risk insurance premiums for Gulf passages up 300–500% in one week.
     </div>
     <div class="news-item">
-      <strong>U.S. & Global Response:</strong> U.S. deploys bunker-buster munitions against Iranian missile sites. Joe Kent (National Counterterrorism Center Director) resigns in protest. NATO allies refuse direct involvement; global shipping lines avoid Persian Gulf routes.
+      <strong>U.S. & Global Response:</strong> U.S. deploys bunker-buster munitions against Iranian missile sites. Joe Kent (National Counterterrorism Center Director) resigns in protest. NATO allies refuse direct involvement.
     </div>
   </div>
 
-  <!-- Precious Metals Pricing – Restored -->
+  <!-- Precious Metals Pricing -->
   <div class="metals">
     <h2>💰 Precious Metals Spot Prices (USD/oz) – March 18, 2026</h2>
     <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$3,245.80</span> (+1.4% today)</div>
@@ -114,7 +118,7 @@
     <p><small>Live spot prices – updated periodically. For real-time trading, consult your broker or exchange.</small></p>
   </div>
 
-  <!-- Second installation banner -->
+  <!-- Second install banner – bottom position -->
   <div class="install">
     <strong>📱 Add to Home Screen – Safari only</strong><br><br>
     1. Tap the Share button (square with ↑ arrow) in Safari.<br>
@@ -123,9 +127,10 @@
     The app will use your Global HVAC logo.
   </div>
 
-  <p><small>Revision 1.7.3 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 1.7.4 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <script>
+    // Calculator logic (unchanged)
     const convs = {
       'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
