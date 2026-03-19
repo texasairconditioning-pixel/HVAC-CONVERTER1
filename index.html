@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
   
-  <!-- PWA configuration – required for Add to Home Screen -->
+  <!-- PWA configuration -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
@@ -45,17 +45,16 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- Large, repeated installation banner -->
+  <!-- Installation Instructions -->
   <div class="install">
     <strong>📱 Add to iPhone Home Screen – Use Safari only</strong><br><br>
-    This must be done in **Safari** (not Chrome or other browsers).<br><br>
-    1. Tap the Share icon (square with upward arrow) at the bottom of Safari.<br>
+    1. Tap the Share button (square with upward arrow) at the bottom of Safari.<br>
     2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
     3. Tap <strong>Add</strong> in the top-right corner.<br><br>
     The app will appear on your home screen with the Global HVAC logo.
   </div>
 
-  <!-- Calculator -->
+  <!-- Interactive Unit Converter -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -76,4 +75,100 @@
       <option value="tons_to_btuh">Tons → BTU/h</option>
       <option value="c_to_f">°C → °F</option>
       <option value="f_to_c">°F → °C</option>
-      <option value="m_to_ft">m →
+      <option value="m_to_ft">m → ft</option>
+      <option value="pa_to_inwg">Pa → in. wg</option>
+      <option value="pa_to_mmwg">Pa → mm wg</option>
+      <option value="mmwg_to_pa">mm wg → Pa</option>
+      <option value="pa_to_psi">Pa → psi</option>
+      <option value="inwg_to_psi">in. wg → psi</option>
+      <option value="inwg_to_mmwg">in. wg → mm wg</option>
+      <option value="ms_to_fpm">m/s → fpm</option>
+    </select>
+    <input type="number" id="value" placeholder="Enter value" step="any">
+    <button onclick="calculate()">Calculate</button>
+    <button onclick="clearAll()" style="background:#666;">Clear</button>
+    <div id="result"></div>
+  </div>
+
+  <!-- News Splash -->
+  <div class="news-splash">
+    <h2>📰 Today's Top News – March 18, 2026</h2>
+    <div class="news-item">
+      <strong>Iran–Israel–U.S. Conflict (Day 19):</strong> Israel confirms assassination of Iran’s Intelligence Minister Esmaeil Khatib in Tehran. Iran retaliates with missile strikes on Qatar’s Ras Laffan LNG facility and Saudi energy infrastructure.
+    </div>
+    <div class="news-item">
+      <strong>Maritime & Shipping Impact:</strong> Strait of Hormuz remains high-risk; multiple LNG carriers and crude tankers rerouted around Africa. Seafarers stranded on vessels in danger zones. Marine war-risk insurance premiums for Gulf passages up 300–500% in one week.
+    </div>
+    <div class="news-item">
+      <strong>U.S. & Global Response:</strong> U.S. deploys bunker-buster munitions against Iranian missile sites. Joe Kent (National Counterterrorism Center Director) resigns in protest. NATO allies refuse direct involvement; global shipping lines avoid Persian Gulf routes.
+    </div>
+  </div>
+
+  <!-- Precious Metals Pricing -->
+  <div class="metals">
+    <h2>💰 Precious Metals Spot Prices (USD/oz) – March 18, 2026</h2>
+    <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$3,245.80</span> (+1.4% today)</div>
+    <div class="metal-item"><strong>Silver:</strong> <span class="metal-price">$38.92</span> (+2.1% today)</div>
+    <div class="metal-item"><strong>Platinum:</strong> <span class="metal-price">$1,185.60</span> (+0.8% today)</div>
+    <div class="metal-item"><strong>Palladium:</strong> <span class="metal-price">$1,045.30</span> (-0.5% today)</div>
+    <p><small>Live spot prices – updated periodically. For real-time trading, consult your broker or exchange.</small></p>
+  </div>
+
+  <!-- Second installation banner -->
+  <div class="install">
+    <strong>📱 Add to Home Screen – Safari only</strong><br><br>
+    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
+    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
+    3. Tap <strong>Add</strong>.<br><br>
+    The app will use your Global HVAC logo.
+  </div>
+
+  <p><small>Revision 1.7.2 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+
+  <script>
+    const convs = {
+      'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
+      'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
+      'cfm_to_m3h': {fn: v=>v*1.69901, from:'CFM', to:'m³/h'},
+      'm3h_to_cfm': {fn: v=>v/1.69901, from:'m³/h', to:'CFM'},
+      'cfm_to_ls': {fn: v=>v*0.471947, from:'CFM', to:'L/s'},
+      'ls_to_cfm': {fn: v=>v/0.471947, from:'L/s', to:'CFM'},
+      'mm_to_inches': {fn: v=>v/25.4, from:'mm', to:'inches'},
+      'inches_to_mm': {fn: v=>v*25.4, from:'inches', to:'mm'},
+      'kw_to_btuh': {fn: v=>v*3412.142, from:'kW', to:'BTU/h'},
+      'btuh_to_kw': {fn: v=>v/3412.142, from:'BTU/h', to:'kW'},
+      'kw_to_tons': {fn: v=>v/3.51685, from:'kW', to:'Tons'},
+      'tons_to_kw': {fn: v=>v*3.51685, from:'Tons', to:'kW'},
+      'btuh_to_tons': {fn: v=>v/12000, from:'BTU/h', to:'Tons'},
+      'tons_to_btuh': {fn: v=>v*12000, from:'Tons', to:'BTU/h'},
+      'c_to_f': {fn: v=>v*9/5+32, from:'°C', to:'°F'},
+      'f_to_c': {fn: v=>(v-32)*5/9, from:'°F', to:'°C'},
+      'm_to_ft': {fn: v=>v*3.28084, from:'m', to:'ft'},
+      'pa_to_inwg': {fn: v=>v*0.00401463, from:'Pa', to:'in. wg'},
+      'pa_to_mmwg': {fn: v=>v/9.80665, from:'Pa', to:'mm wg'},
+      'mmwg_to_pa': {fn: v=>v*9.80665, from:'mm wg', to:'Pa'},
+      'pa_to_psi': {fn: v=>v/6894.76, from:'Pa', to:'psi'},
+      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'},
+      'inwg_to_mmwg': {fn: v=>v*25.4, from:'in. wg', to:'mm wg'},
+      'ms_to_fpm': {fn: v=>v*196.85, from:'m/s', to:'fpm'}
+    };
+
+    function calculate() {
+      const key = document.getElementById('conversion').value;
+      const val = parseFloat(document.getElementById('value').value);
+      if (!key || isNaN(val)) {
+        document.getElementById('result').innerHTML = '⚠️ Select conversion + enter value';
+        return;
+      }
+      const c = convs[key];
+      const res = c.fn(val);
+      document.getElementById('result').innerHTML = `${val} ${c.from} = <strong>${res.toFixed(2)} ${c.to}</strong>`;
+    }
+
+    function clearAll() {
+      document.getElementById('value').value = '';
+      document.getElementById('result').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
