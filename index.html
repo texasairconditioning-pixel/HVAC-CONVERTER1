@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
   
-  <!-- PWA setup – installs with your logo on any phone -->
+  <!-- PWA configuration – enables home screen installation with logo -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
@@ -16,18 +16,18 @@
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
     .header { text-align: center; margin-bottom: 2rem; }
     .contact, .calculator, .news-splash { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .install { background: #1e90ff; color: white; padding: 25px; border-radius: 12px; text-align: center; font-size: 1.3em; margin: 20px 0; line-height: 1.5; }
+    .install { background: #1e90ff; color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.35em; margin: 25px 0; line-height: 1.5; font-weight: 500; }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
     button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
     #result { font-size: 1.5em; font-weight: bold; margin: 15px 0; color: #1e90ff; text-align: center; }
-    .news-item { margin-bottom: 1rem; }
+    .news-item { margin-bottom: 1.2rem; }
     .news-item strong { color: #1e90ff; }
   </style>
 </head>
 <body>
 
-  <!-- Logo + Company Header -->
+  <!-- Header with logo and company name -->
   <div class="header">
     <img src="icon.png" alt="Global HVAC Solutions LLC" class="logo">
     <h1>Global HVAC Solutions LLC</h1>
@@ -42,33 +42,16 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- Prominent Install Instructions -->
+  <!-- Very prominent installation instructions (increased visibility) -->
   <div class="install">
-    <strong>📱 Add to Your iPhone Home Screen (5 seconds)</strong><br><br>
-    1. Tap the Share button (square with ↑ arrow) at the bottom of Safari.<br>
-    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
-    3. Tap **Add**.<br><br>
-    It installs as a real app with the Global HVAC logo!
+    <strong>📱 Add this page to your iPhone Home Screen</strong><br><br>
+    1. Tap the <strong>Share</strong> button (square with upward arrow) at the bottom of Safari.<br>
+    2. Scroll down in the menu and tap <strong>“Add to Home Screen”</strong>.<br>
+    3. Tap <strong>Add</strong> in the top-right corner.<br><br>
+    The app will appear on your home screen with the Global HVAC logo.
   </div>
 
-  <!-- News Splash Section -->
-  <div class="news-splash">
-    <h2>📰 Today's Top News – March 18, 2026</h2>
-    <div class="news-item">
-      <strong>Iran–Israel–U.S. Conflict Escalates (Day 19):</strong> Israel assassinates Iran's Intelligence Minister Esmaeil Khatib in Tehran airstrike. Iran retaliates with missile strikes on Qatar's Ras Laffan LNG facility and Saudi energy sites, causing extensive damage and oil price surges.
-    </div>
-    <div class="news-item">
-      <strong>U.S. Involvement:</strong> Pentagon deploys bunker-buster munitions against Iranian missile sites near Strait of Hormuz. President Trump criticizes NATO allies for non-participation; Joe Kent (National Counterterrorism Center Director) resigns in protest over war influence from Israel.
-    </div>
-    <div class="news-item">
-      <strong>Regional Impact:</strong> Civilian casualties reported in Israel (Ramat Gan missile strike) and West Bank (Iranian missile fragments). Iran vows severe reprisals; global energy markets disrupted.
-    </div>
-    <div class="news-item">
-      <strong>Other Headlines:</strong> China dismisses U.S. requests on Hormuz; European leaders distance from conflict; domestic U.S. debates over war coverage and deportations intensify.
-    </div>
-  </div>
-
-  <!-- Interactive Calculator (24 conversions) -->
+  <!-- Interactive Unit Converter (moved before news) -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -102,6 +85,29 @@
     <button onclick="calculate()">Calculate</button>
     <button onclick="clearAll()" style="background:#666;">Clear</button>
     <div id="result"></div>
+  </div>
+
+  <!-- News Splash Section (updated with maritime focus) -->
+  <div class="news-splash">
+    <h2>📰 Today's Top News – March 18, 2026</h2>
+    <div class="news-item">
+      <strong>Iran–Israel–U.S. Conflict (Day 19):</strong> Israel confirms assassination of Iran’s Intelligence Minister Esmaeil Khatib in Tehran. Iran retaliates with missile strikes on Qatar’s Ras Laffan LNG facility and Saudi energy infrastructure, causing significant damage and sharp oil price increases.
+    </div>
+    <div class="news-item">
+      <strong>Maritime Industry Impact:</strong> Strait of Hormuz remains highly dangerous; multiple LNG carriers and tankers rerouted around Africa. Seafarers reported stranded on vessels in high-risk zones. Marine insurance premiums for Gulf routes have risen 300–500% in the past week.
+    </div>
+    <div class="news-item">
+      <strong>U.S. & Regional Developments:</strong> U.S. deploys bunker-buster munitions against Iranian missile sites. Joe Kent (National Counterterrorism Center Director) resigns in protest. NATO allies decline direct involvement; global shipping lines continue to avoid the Persian Gulf.
+    </div>
+  </div>
+
+  <!-- Repeated install banner at bottom for better visibility -->
+  <div class="install">
+    <strong>📱 Add to Home Screen – Quick Steps</strong><br><br>
+    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
+    2. Scroll and select <strong>“Add to Home Screen”</strong>.<br>
+    3. Tap <strong>Add</strong>.<br><br>
+    The app will use your Global HVAC logo.
   </div>
 
   <p><small>Revision 1.6.3 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
