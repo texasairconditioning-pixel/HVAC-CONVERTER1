@@ -183,6 +183,8 @@
       <option value="psi_to_bar">psi → bar</option>
       <option value="lpm_to_gpm">L/min → GPM</option>
       <option value="gpm_to_lpm">GPM → L/min</option>
+      <option value="bar_to_kpa">bar → kPa</option>
+      <option value="kpa_to_bar">kPa → bar</option>
     </select>
     <input type="number" id="value" placeholder="Enter value" step="any">
     <button onclick="calculate()">Calculate</button>
@@ -194,15 +196,17 @@
     </div>
   </div>
 
-  <!-- ABS Regulations Tab -->
+  <!-- ABS Regulations Tab (expanded with Marine Electrical Standards) -->
   <div id="abs" class="tab-content" style="display:none;">
     <h2>📘 ABS Rules & Guides Lookup</h2>
     <p>Access the latest American Bureau of Shipping (ABS) Rules, Guides, and Notices directly from the official source.</p>
     <ul>
       <li><strong>ABS Rules & Guides Portal:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides.html" target="_blank">Browse all current ABS Rules & Guides</a></li>
       <li><strong>Consolidated Marine & Offshore Rules:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides/consolidated-marine-and-offshore-rules.html" target="_blank">Consolidated Rules</a></li>
+      <li><strong>Marine Electrical Standards:</strong> <a href="https://ww2.eagle.org/content/dam/eagle/rules-and-guides/current/electrical/4-8-electrical-installations/4-8-electrical-installations.pdf" target="_blank">ABS Electrical Installations (4-8)</a></li>
       <li><strong>ABS Eagle Search:</strong> <a href="https://eagle.org" target="_blank">Search ABS Eagle.org (enter rule number or keyword)</a></li>
     </ul>
+    <p><small>Always verify the latest version on eagle.org. Links open in a new tab.</small></p>
   </div>
 
   <!-- Marine Cable Sizing Tab (expanded) -->
@@ -225,8 +229,11 @@
         <tr><td>4/0</td><td>3</td><td>230 A</td><td>Large generators</td></tr>
         <tr><td>350 MCM</td><td>3</td><td>310 A</td><td>High-power feeders</td></tr>
         <tr><td>500 MCM</td><td>3</td><td>380 A</td><td>Main switchboard</td></tr>
+        <tr><td>750 MCM</td><td>3</td><td>475 A</td><td>Heavy industrial</td></tr>
+        <tr><td>1000 MCM</td><td>3</td><td>545 A</td><td>Large main feeders</td></tr>
       </tbody>
     </table>
+    <p><small>Notes: Ampacity assumes no more than 3 current-carrying conductors, proper derating for bundling/temperature, and compliance with ABS 4-8-3/5.</small></p>
   </div>
 
   <!-- Voltage Drop Tab -->
@@ -281,7 +288,7 @@
       e.currentTarget.classList.add("active");
     }
 
-    // All your original calculator, favorites, voltage drop, and theme code (kept exactly as in your 1.8.0)
+    // All your original calculator, favorites, voltage drop, theme toggle code (kept exactly as in your 1.8.0)
     const convs = {
       'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
@@ -318,7 +325,9 @@
       'bar_to_psi': {fn: v=>v*14.5038, from:'bar', to:'psi'},
       'psi_to_bar': {fn: v=>v/14.5038, from:'psi', to:'bar'},
       'lpm_to_gpm': {fn: v=>v*0.264172, from:'L/min', to:'GPM'},
-      'gpm_to_lpm': {fn: v=>v/0.264172, from:'GPM', to:'L/min'}
+      'gpm_to_lpm': {fn: v=>v/0.264172, from:'GPM', to:'L/min'},
+      'bar_to_kpa': {fn: v=>v*100, from:'bar', to:'kPa'},
+      'kpa_to_bar': {fn: v=>v/100, from:'kPa', to:'bar'}
     };
 
     function calculate() {
