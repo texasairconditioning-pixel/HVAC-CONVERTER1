@@ -5,36 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
   
-  <!-- PWA configuration – enables home screen installation with logo -->
+  <!-- PWA configuration – required for Add to Home Screen -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#1e90ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; background: #f9f9f9; color: #222; line-height: 1.6; }
     h1, h2 { color: #1e90ff; text-align: center; }
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
     .header { text-align: center; margin-bottom: 2rem; }
-    .contact, .calculator, .news-splash { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-    .install { background: #1e90ff; color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.35em; margin: 25px 0; line-height: 1.5; font-weight: 500; }
+    .contact, .calculator, .news-splash, .metals { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .install { background: #1e90ff; color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.4em; margin: 30px 0; line-height: 1.5; font-weight: 600; }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; }
     button { background: #1e90ff; color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: #0066cc; }
     #result { font-size: 1.5em; font-weight: bold; margin: 15px 0; color: #1e90ff; text-align: center; }
-    .news-item { margin-bottom: 1.2rem; }
-    .news-item strong { color: #1e90ff; }
+    .news-item, .metal-item { margin-bottom: 1.2rem; }
+    .news-item strong, .metal-item strong { color: #1e90ff; }
+    .metal-price { font-size: 1.3em; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <!-- Header with logo and company name -->
+  <!-- Header -->
   <div class="header">
     <img src="icon.png" alt="Global HVAC Solutions LLC" class="logo">
     <h1>Global HVAC Solutions LLC</h1>
     <p><strong>Commercial • Industrial • Marine & Offshore</strong><br>Service • Sales • Parts</p>
   </div>
 
-  <!-- Contact Information -->
+  <!-- Contact -->
   <div class="contact">
     <h2>📞 Contact Us</h2>
     <p><strong>Jeff Lee</strong><br>
@@ -42,16 +45,17 @@
        Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
   </div>
 
-  <!-- Very prominent installation instructions (increased visibility) -->
+  <!-- Large, repeated installation banner -->
   <div class="install">
-    <strong>📱 Add this page to your iPhone Home Screen</strong><br><br>
-    1. Tap the <strong>Share</strong> button (square with upward arrow) at the bottom of Safari.<br>
-    2. Scroll down in the menu and tap <strong>“Add to Home Screen”</strong>.<br>
+    <strong>📱 Add to iPhone Home Screen – Use Safari only</strong><br><br>
+    This must be done in **Safari** (not Chrome or other browsers).<br><br>
+    1. Tap the Share icon (square with upward arrow) at the bottom of Safari.<br>
+    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
     3. Tap <strong>Add</strong> in the top-right corner.<br><br>
     The app will appear on your home screen with the Global HVAC logo.
   </div>
 
-  <!-- Interactive Unit Converter (moved before news) -->
+  <!-- Calculator -->
   <div class="calculator">
     <h2>🔢 Engineering Unit Converter</h2>
     <select id="conversion">
@@ -72,90 +76,4 @@
       <option value="tons_to_btuh">Tons → BTU/h</option>
       <option value="c_to_f">°C → °F</option>
       <option value="f_to_c">°F → °C</option>
-      <option value="m_to_ft">m → ft</option>
-      <option value="pa_to_inwg">Pa → in. wg</option>
-      <option value="pa_to_mmwg">Pa → mm wg</option>
-      <option value="mmwg_to_pa">mm wg → Pa</option>
-      <option value="pa_to_psi">Pa → psi</option>
-      <option value="inwg_to_psi">in. wg → psi</option>
-      <option value="inwg_to_mmwg">in. wg → mm wg</option>
-      <option value="ms_to_fpm">m/s → fpm</option>
-    </select>
-    <input type="number" id="value" placeholder="Enter value" step="any">
-    <button onclick="calculate()">Calculate</button>
-    <button onclick="clearAll()" style="background:#666;">Clear</button>
-    <div id="result"></div>
-  </div>
-
-  <!-- News Splash Section (updated with maritime focus) -->
-  <div class="news-splash">
-    <h2>📰 Today's Top News – March 18, 2026</h2>
-    <div class="news-item">
-      <strong>Iran–Israel–U.S. Conflict (Day 19):</strong> Israel confirms assassination of Iran’s Intelligence Minister Esmaeil Khatib in Tehran. Iran retaliates with missile strikes on Qatar’s Ras Laffan LNG facility and Saudi energy infrastructure, causing significant damage and sharp oil price increases.
-    </div>
-    <div class="news-item">
-      <strong>Maritime Industry Impact:</strong> Strait of Hormuz remains highly dangerous; multiple LNG carriers and tankers rerouted around Africa. Seafarers reported stranded on vessels in high-risk zones. Marine insurance premiums for Gulf routes have risen 300–500% in the past week.
-    </div>
-    <div class="news-item">
-      <strong>U.S. & Regional Developments:</strong> U.S. deploys bunker-buster munitions against Iranian missile sites. Joe Kent (National Counterterrorism Center Director) resigns in protest. NATO allies decline direct involvement; global shipping lines continue to avoid the Persian Gulf.
-    </div>
-  </div>
-
-  <!-- Repeated install banner at bottom for better visibility -->
-  <div class="install">
-    <strong>📱 Add to Home Screen – Quick Steps</strong><br><br>
-    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
-    2. Scroll and select <strong>“Add to Home Screen”</strong>.<br>
-    3. Tap <strong>Add</strong>.<br><br>
-    The app will use your Global HVAC logo.
-  </div>
-
-  <p><small>Revision 1.6.3 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
-
-  <script>
-    const convs = {
-      'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
-      'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
-      'cfm_to_m3h': {fn: v=>v*1.69901, from:'CFM', to:'m³/h'},
-      'm3h_to_cfm': {fn: v=>v/1.69901, from:'m³/h', to:'CFM'},
-      'cfm_to_ls': {fn: v=>v*0.471947, from:'CFM', to:'L/s'},
-      'ls_to_cfm': {fn: v=>v/0.471947, from:'L/s', to:'CFM'},
-      'mm_to_inches': {fn: v=>v/25.4, from:'mm', to:'inches'},
-      'inches_to_mm': {fn: v=>v*25.4, from:'inches', to:'mm'},
-      'kw_to_btuh': {fn: v=>v*3412.142, from:'kW', to:'BTU/h'},
-      'btuh_to_kw': {fn: v=>v/3412.142, from:'BTU/h', to:'kW'},
-      'kw_to_tons': {fn: v=>v/3.51685, from:'kW', to:'Tons'},
-      'tons_to_kw': {fn: v=>v*3.51685, from:'Tons', to:'kW'},
-      'btuh_to_tons': {fn: v=>v/12000, from:'BTU/h', to:'Tons'},
-      'tons_to_btuh': {fn: v=>v*12000, from:'Tons', to:'BTU/h'},
-      'c_to_f': {fn: v=>v*9/5+32, from:'°C', to:'°F'},
-      'f_to_c': {fn: v=>(v-32)*5/9, from:'°F', to:'°C'},
-      'm_to_ft': {fn: v=>v*3.28084, from:'m', to:'ft'},
-      'pa_to_inwg': {fn: v=>v*0.00401463, from:'Pa', to:'in. wg'},
-      'pa_to_mmwg': {fn: v=>v/9.80665, from:'Pa', to:'mm wg'},
-      'mmwg_to_pa': {fn: v=>v*9.80665, from:'mm wg', to:'Pa'},
-      'pa_to_psi': {fn: v=>v/6894.76, from:'Pa', to:'psi'},
-      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'},
-      'inwg_to_mmwg': {fn: v=>v*25.4, from:'in. wg', to:'mm wg'},
-      'ms_to_fpm': {fn: v=>v*196.85, from:'m/s', to:'fpm'}
-    };
-
-    function calculate() {
-      const key = document.getElementById('conversion').value;
-      const val = parseFloat(document.getElementById('value').value);
-      if (!key || isNaN(val)) {
-        document.getElementById('result').innerHTML = '⚠️ Select conversion + enter value';
-        return;
-      }
-      const c = convs[key];
-      const res = c.fn(val);
-      document.getElementById('result').innerHTML = `${val} ${c.from} = <strong>${res.toFixed(2)} ${c.to}</strong>`;
-    }
-
-    function clearAll() {
-      document.getElementById('value').value = '';
-      document.getElementById('result').innerHTML = '';
-    }
-  </script>
-</body>
-</html>
+      <option value="m_to_ft">m →
