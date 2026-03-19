@@ -14,7 +14,436 @@
   <link rel="apple-touch-icon" href="icon.png">
 
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; background: #f9f9f9; color: #222; line-height: 1.6; }
-    h1, h2 { color: #1e90ff; text-align: center; }
+    :root {
+      --bg: #f9f9f9;
+      --text: #222;
+      --card: white;
+      --accent: #1e90ff;
+      --accent-dark: #0066cc;
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+      --accent: #4da6ff;
+      --accent-dark: #1a75ff;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1, h2 { color: var(--accent); text-align: center; }
     .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
-    .header { text-align: center; margin
+    .header { text-align: center; margin-bottom: 1.5rem; }
+    .contact, .calculator, .news-splash, .metals, .tabs-content {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      transition: background 0.3s;
+    }
+    .install { background: var(--accent); color: white; padding: 25px 20px; border-radius: 12px; text-align: center; font-size: 1.3em; margin: 20px 0; line-height: 1.5; }
+    select, input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; box-sizing: border-box; }
+    button { background: var(--accent); color: white; border: none; font-weight: bold; cursor: pointer; }
+    button:hover { background: var(--accent-dark); }
+    #result { font-size: 1.5em; font-weight: bold; margin: 15px 0; color: var(--accent); text-align: center; }
+    .news-item, .metal-item { margin-bottom: 1.2rem; }
+    .news-item strong, .metal-item strong { color: var(--accent); }
+    .metal-price { font-size: 1.3em; font-weight: bold; }
+    .tab-buttons { display: flex; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab-button { padding: 10px 18px; margin: 4px; background: #e0e0e0; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-weight: bold; }
+    .tab-button.active { background: var(--accent); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background: #f2f2f2; }
+    .floating-contact {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    .favorites { margin-top: 1rem; }
+    .favorite-btn { background: #4caf50; margin: 5px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+
+  <!-- Theme toggle -->
+  <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+
+  <!-- Floating contact button -->
+  <div class="floating-contact" onclick="window.location='tel:4097490650'">☎</div>
+
+  <!-- Header -->
+  <div class="header">
+    <img src="icon.png" alt="Global HVAC Solutions LLC" class="logo">
+    <h1>Global HVAC Solutions LLC</h1>
+    <p><strong>Commercial • Industrial • Marine & Offshore</strong><br>Service • Sales • Parts</p>
+  </div>
+
+  <!-- Contact -->
+  <div class="contact">
+    <h2>📞 Contact Us</h2>
+    <p><strong>Jeff Lee</strong><br>
+       Phone: <a href="tel:4097490650">409-749-0650</a><br>
+       Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
+  </div>
+
+  <!-- Installation banner (bottom only) -->
+  <div class="install">
+    <strong>📱 Add to iPhone Home Screen – Safari only</strong><br><br>
+    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
+    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
+    3. Tap <strong>Add</strong>.<br><br>
+    The app will use your Global HVAC logo.
+  </div>
+
+  <!-- Tab Buttons -->
+  <div class="tab-buttons">
+    <button class="tab-button active" onclick="openTab('converter')">Converter</button>
+    <button class="tab-button" onclick="openTab('abs')">ABS Regulations</button>
+    <button class="tab-button" onclick="openTab('cable')">Marine Cable Sizing</button>
+    <button class="tab-button" onclick="openTab('voltagedrop')">Voltage Drop</button>
+  </div>
+
+  <!-- Converter Tab -->
+  <div id="converter" class="tab-content active calculator">
+    <h2>🔢 Engineering Unit Converter</h2>
+    <select id="conversion">
+      <option value="">— Select conversion —</option>
+      <option value="cmh_to_cfm">CMH → CFM</option>
+      <option value="cfm_to_cmh">CFM → CMH</option>
+      <option value="cfm_to_m3h">CFM → m³/h</option>
+      <option value="m3h_to_cfm">m³/h → CFM</option>
+      <option value="cfm_to_ls">CFM → L/s</option>
+      <option value="ls_to_cfm">L/s → CFM</option>
+      <option value="mm_to_inches">mm → inches</option>
+      <option value="inches_to_mm">inches → mm</option>
+      <option value="kw_to_btuh">kW → BTU/h</option>
+      <option value="btuh_to_kw">BTU/h → kW</option>
+      <option value="kw_to_tons">kW → Tons refrigeration</option>
+      <option value="tons_to_kw">Tons → kW</option>
+      <option value="btuh_to_tons">BTU/h → Tons</option>
+      <option value="tons_to_btuh">Tons → BTU/h</option>
+      <option value="c_to_f">°C → °F</option>
+      <option value="f_to_c">°F → °C</option>
+      <option value="c_to_k">°C → Kelvin</option>
+      <option value="k_to_c">Kelvin → °C</option>
+      <option value="f_to_k">°F → Kelvin</option>
+      <option value="k_to_f">Kelvin → °F</option>
+      <option value="m_to_ft">m → ft</option>
+      <option value="pa_to_inwg">Pa → in. wg</option>
+      <option value="pa_to_mmwg">Pa → mm wg</option>
+      <option value="mmwg_to_pa">mm wg → Pa</option>
+      <option value="pa_to_psi">Pa → psi</option>
+      <option value="inwg_to_psi">in. wg → psi</option>
+      <option value="inwg_to_mmwg">in. wg → mm wg</option>
+      <option value="ms_to_fpm">m/s → fpm</option>
+      <option value="ms_to_knots">m/s → knots</option>
+      <option value="knots_to_ms">knots → m/s</option>
+      <option value="hp_to_kw">HP → kW</option>
+      <option value="kw_to_hp">kW → HP</option>
+      <option value="bar_to_psi">bar → psi</option>
+      <option value="psi_to_bar">psi → bar</option>
+      <option value="lpm_to_gpm">L/min → GPM</option>
+      <option value="gpm_to_lpm">GPM → L/min</option>
+    </select>
+    <input type="number" id="value" placeholder="Enter value" step="any">
+    <button onclick="calculate()">Calculate</button>
+    <button onclick="clearAll()" style="background:#666;">Clear</button>
+    <div id="result"></div>
+    <div class="favorites">
+      <h3>Recent Conversions</h3>
+      <div id="favorites-list"></div>
+    </div>
+  </div>
+
+  <!-- ABS Regulations Tab -->
+  <div id="abs" class="tab-content" style="display:none;">
+    <h2>📘 ABS Rules & Guides Lookup</h2>
+    <p>Access the latest American Bureau of Shipping (ABS) Rules, Guides, and Notices directly from the official source.</p>
+    <ul>
+      <li><strong>ABS Rules & Guides Portal:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides.html" target="_blank">Browse all current ABS Rules & Guides</a></li>
+      <li><strong>Consolidated Marine & Offshore Rules:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides/consolidated-marine-and-offshore-rules.html" target="_blank">Consolidated Rules</a></li>
+      <li><strong>ABS Eagle Search:</strong> <a href="https://eagle.org" target="_blank">Search ABS Eagle.org (enter rule number or keyword)</a></li>
+    </ul>
+    <p><small>Always verify the latest version on eagle.org. Links open in a new tab.</small></p>
+  </div>
+
+  <!-- Marine Cable Sizing Tab -->
+  <div id="cable" class="tab-content" style="display:none;">
+    <h2>⚓ Marine Cable Sizing Reference (3-Conductor)</h2>
+    <p>Approximate ampacity for marine shipboard cables (90°C insulation, 40°C ambient, per ABS/IEEE 45/NEC marine guidelines).</p>
+    <table>
+      <thead>
+        <tr>
+          <th>AWG Size</th>
+          <th>Conductor</th>
+          <th>Max Ampacity (90°C)</th>
+          <th>Typical Use Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>14</td>
+          <td>3</td>
+          <td>20–25 A</td>
+          <td>Control circuits, lighting</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>3</td>
+          <td>25–30 A</td>
+          <td>Small motors, branch circuits</td>
+        </tr>
+        <tr style="background:#e6f3ff;">
+          <td><strong>10</strong></td>
+          <td><strong>3</strong></td>
+          <td><strong>35–40 A</strong></td>
+          <td><strong>Medium motors, power distribution</strong></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>3</td>
+          <td>50–55 A</td>
+          <td>Larger motors, feeders</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>3</td>
+          <td>65–75 A</td>
+          <td>Main feeders, heavy equipment</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><small>Notes: Ampacity assumes no more than 3 current-carrying conductors, proper derating for bundling/temperature, and compliance with ABS 4-8-3/5.</small></p>
+  </div>
+
+  <!-- Voltage Drop Tab -->
+  <div id="voltagedrop" class="tab-content" style="display:none;">
+    <h2>⚡ Voltage Drop Calculator (Marine)</h2>
+    <p>Estimate voltage drop for 3-conductor copper cable (90°C insulation, 40°C ambient).</p>
+    <input type="number" id="vd-length" placeholder="Circuit length (ft)" step="any">
+    <input type="number" id="vd-current" placeholder="Load current (A)" step="any">
+    <select id="vd-gauge">
+      <option value="14">14 AWG</option>
+      <option value="12">12 AWG</option>
+      <option value="10">10 AWG</option>
+      <option value="8">8 AWG</option>
+      <option value="6">6 AWG</option>
+    </select>
+    <input type="number" id="vd-voltage" placeholder="System voltage (V)" step="any" value="480">
+    <button onclick="calculateVoltageDrop()">Calculate</button>
+    <div id="vd-result" style="margin-top:1rem; font-size:1.3em;"></div>
+  </div>
+
+  <!-- News Splash -->
+  <div class="news-splash">
+    <h2>📰 Latest Headlines – Live</h2>
+    <div class="news-item">
+      <strong>Gulf Crisis Escalation:</strong> Iran strikes Qatar LNG facility; oil prices surge 18% amid supply fears.
+    </div>
+    <div class="news-item">
+      <strong>Maritime Chaos:</strong> Strait of Hormuz high-risk; tankers rerouted, war-risk premiums at record levels.
+    </div>
+    <div class="news-item">
+      <strong>U.S. Response:</strong> Additional naval deployment; congressional inquiry into intelligence leadership.
+    </div>
+  </div>
+
+  <!-- Precious Metals -->
+  <div class="metals">
+    <h2>💰 Precious Metals Spot Prices (USD/oz) – Live</h2>
+    <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$4,851</span> (-3.2% today)</div>
+    <div class="metal-item"><strong>Silver:</strong> <span class="metal-price">$76.20</span> (-4.1% today)</div>
+    <div class="metal-item"><strong>Platinum:</strong> <span class="metal-price">$2,004</span> (-6.3% today)</div>
+    <div class="metal-item"><strong>Palladium:</strong> <span class="metal-price">$1,477</span> (-4.8% today)</div>
+    <p><small>Approximate from live feeds. Refresh for update.</small></p>
+  </div>
+
+  <!-- Bottom installation banner -->
+  <div class="install">
+    <strong>📱 Add to iPhone Home Screen – Safari only</strong><br><br>
+    1. Tap the Share button (square with ↑ arrow) in Safari.<br>
+    2. Scroll down and tap <strong>“Add to Home Screen”</strong>.<br>
+    3. Tap <strong>Add</strong>.<br><br>
+    The app will use your Global HVAC logo.
+  </div>
+
+  <p><small>Revision 1.7.7 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+
+  <!-- Scripts -->
+  <script>
+    // Tab switching
+    function openTab(tabName) {
+      var i, tabcontent, tabbuttons;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tabbuttons = document.getElementsByClassName("tab-button");
+      for (i = 0; i < tabbuttons.length; i++) {
+        tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      event.currentTarget.className += " active";
+    }
+
+    // Dark mode toggle
+    function toggleTheme() {
+      document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
+      const icon = document.querySelector('.theme-toggle');
+      icon.textContent = document.body.dataset.theme === "dark" ? "☀️" : "🌙";
+    }
+
+    // Calculator
+    const convs = {
+      'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
+      'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
+      'cfm_to_m3h': {fn: v=>v*1.69901, from:'CFM', to:'m³/h'},
+      'm3h_to_cfm': {fn: v=>v/1.69901, from:'m³/h', to:'CFM'},
+      'cfm_to_ls': {fn: v=>v*0.471947, from:'CFM', to:'L/s'},
+      'ls_to_cfm': {fn: v=>v/0.471947, from:'L/s', to:'CFM'},
+      'mm_to_inches': {fn: v=>v/25.4, from:'mm', to:'inches'},
+      'inches_to_mm': {fn: v=>v*25.4, from:'inches', to:'mm'},
+      'kw_to_btuh': {fn: v=>v*3412.142, from:'kW', to:'BTU/h'},
+      'btuh_to_kw': {fn: v=>v/3412.142, from:'BTU/h', to:'kW'},
+      'kw_to_tons': {fn: v=>v/3.51685, from:'kW', to:'Tons'},
+      'tons_to_kw': {fn: v=>v*3.51685, from:'Tons', to:'kW'},
+      'btuh_to_tons': {fn: v=>v/12000, from:'BTU/h', to:'Tons'},
+      'tons_to_btuh': {fn: v=>v*12000, from:'Tons', to:'BTU/h'},
+      'c_to_f': {fn: v=>v*9/5+32, from:'°C', to:'°F'},
+      'f_to_c': {fn: v=>(v-32)*5/9, from:'°F', to:'°C'},
+      'c_to_k': {fn: v=>v+273.15, from:'°C', to:'K'},
+      'k_to_c': {fn: v=>v-273.15, from:'K', to:'°C'},
+      'f_to_k': {fn: v=>(v-32)*5/9+273.15, from:'°F', to:'K'},
+      'k_to_f': {fn: v=>(v-273.15)*9/5+32, from:'K', to:'°F'},
+      'm_to_ft': {fn: v=>v*3.28084, from:'m', to:'ft'},
+      'pa_to_inwg': {fn: v=>v*0.00401463, from:'Pa', to:'in. wg'},
+      'pa_to_mmwg': {fn: v=>v/9.80665, from:'Pa', to:'mm wg'},
+      'mmwg_to_pa': {fn: v=>v*9.80665, from:'mm wg', to:'Pa'},
+      'pa_to_psi': {fn: v=>v/6894.76, from:'Pa', to:'psi'},
+      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'},
+      'inwg_to_mmwg': {fn: v=>v*25.4, from:'in. wg', to:'mm wg'},
+      'ms_to_fpm': {fn: v=>v*196.85, from:'m/s', to:'fpm'},
+      'ms_to_knots': {fn: v=>v*1.94384, from:'m/s', to:'knots'},
+      'knots_to_ms': {fn: v=>v/1.94384, from:'knots', to:'m/s'},
+      'hp_to_kw': {fn: v=>v*0.7457, from:'HP', to:'kW'},
+      'kw_to_hp': {fn: v=>v/0.7457, from:'kW', to:'HP'},
+      'bar_to_psi': {fn: v=>v*14.5038, from:'bar', to:'psi'},
+      'psi_to_bar': {fn: v=>v/14.5038, from:'psi', to:'bar'},
+      'lpm_to_gpm': {fn: v=>v*0.264172, from:'L/min', to:'GPM'},
+      'gpm_to_lpm': {fn: v=>v/0.264172, from:'GPM', to:'L/min'}
+    };
+
+    function calculate() {
+      const key = document.getElementById('conversion').value;
+      const val = parseFloat(document.getElementById('value').value);
+      if (!key || isNaN(val)) {
+        document.getElementById('result').innerHTML = '⚠️ Select conversion + enter value';
+        return;
+      }
+      const c = convs[key];
+      const res = c.fn(val);
+      const resultText = `${val} ${c.from} = ${res.toFixed(2)} ${c.to}`;
+      document.getElementById('result').innerHTML = `<strong>${resultText}</strong>`;
+      // Save to favorites
+      saveFavorite(key, val, resultText);
+    }
+
+    function clearAll() {
+      document.getElementById('value').value = '';
+      document.getElementById('result').innerHTML = '';
+    }
+
+    // Favorites
+    function saveFavorite(key, val, result) {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favorites.unshift({key, val, result, date: new Date().toLocaleString()});
+      favorites = favorites.slice(0, 5); // keep last 5
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      loadFavorites();
+    }
+
+    function loadFavorites() {
+      const list = document.getElementById('favorites-list');
+      list.innerHTML = '';
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favorites.forEach(f => {
+        const btn = document.createElement('button');
+        btn.className = 'favorite-btn';
+        btn.textContent = f.result;
+        btn.onclick = () => {
+          document.getElementById('result').innerHTML = `<strong>${f.result}</strong>`;
+        };
+        list.appendChild(btn);
+      });
+    }
+
+    // Voltage Drop Calculator
+    function calculateVoltageDrop() {
+      const length = parseFloat(document.getElementById('vd-length').value) || 0;
+      const current = parseFloat(document.getElementById('vd-current').value) || 0;
+      const gauge = document.getElementById('vd-gauge').value;
+      const voltage = parseFloat(document.getElementById('vd-voltage').value) || 480;
+
+      // Resistance per 1000 ft (copper, approx)
+      const r1000ft = {
+        '14': 2.525,
+        '12': 1.588,
+        '10': 0.999,
+        '8': 0.628,
+        '6': 0.395
+      }[gauge] || 1.0;
+
+      const resistance = (r1000ft * length / 1000) * 2; // round trip
+      const dropVolts = resistance * current;
+      const dropPercent = (dropVolts / voltage) * 100;
+      const status = dropPercent < 3 ? '✅ Within 3% limit' : '⚠️ Exceeds 3% limit';
+
+      document.getElementById('vd-result').innerHTML = `
+        Voltage drop: <strong>${dropVolts.toFixed(2)} V (${dropPercent.toFixed(2)}%)</strong><br>
+        ${status}
+      `;
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
+      const icon = document.querySelector('.theme-toggle');
+      icon.textContent = document.body.dataset.theme === "dark" ? "☀️" : "🌙";
+    }
+
+    // Load favorites on start
+    loadFavorites();
+  </script>
+</body>
+</html>
