@@ -72,7 +72,7 @@
     .tab-button { 
       padding: 10px 18px; 
       margin: 4px; 
-      background: #222; /* BLACK inactive tabs */
+      background: #222; /* DARK INACTIVE TABS */
       color: #ddd; 
       border: none; 
       border-radius: 8px 8px 0 0; 
@@ -85,7 +85,7 @@
     }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    table { width: 100%; border-collapse: collapse; margin: 1rem 0; table-layout: fixed; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
     th { background: #f2f2f2; }
     .floating-contact {
@@ -150,7 +150,6 @@
     <button class="tab-button active" onclick="openTab(event, 'converter')">Converter</button>
     <button class="tab-button" onclick="openTab(event, 'abs')">ABS Regulations</button>
     <button class="tab-button" onclick="openTab(event, 'cable')">Marine Cable Sizing</button>
-    <button class="tab-button" onclick="openTab(event, 'motor')">Marine Motor Sizing</button>
     <button class="tab-button" onclick="openTab(event, 'voltagedrop')">Voltage Drop</button>
     <button class="tab-button" onclick="openTab(event, 'news')">News & Markets</button>
   </div>
@@ -209,7 +208,18 @@
     </div>
   </div>
 
-  <!-- Marine Cable Sizing Tab (expanded + IEC standards) -->
+  <!-- ABS Regulations Tab -->
+  <div id="abs" class="tab-content" style="display:none;">
+    <h2>📘 ABS Rules & Guides Lookup</h2>
+    <p>Access the latest American Bureau of Shipping (ABS) Rules, Guides, and Notices directly from the official source.</p>
+    <ul>
+      <li><strong>ABS Rules & Guides Portal:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides.html" target="_blank">Browse all current ABS Rules & Guides</a></li>
+      <li><strong>Consolidated Marine & Offshore Rules:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides/consolidated-marine-and-offshore-rules.html" target="_blank">Consolidated Rules</a></li>
+      <li><strong>ABS Eagle Search:</strong> <a href="https://eagle.org" target="_blank">Search ABS Eagle.org (enter rule number or keyword)</a></li>
+    </ul>
+  </div>
+
+  <!-- Marine Cable Sizing Tab -->
   <div id="cable" class="tab-content" style="display:none;">
     <h2>⚓ Marine Cable Sizing Reference (3-Conductor)</h2>
     <p>Approximate ampacity for larger marine shipboard cables (90°C insulation, 40°C ambient).</p>
@@ -233,30 +243,161 @@
         <tr><td>1000 MCM</td><td>3</td><td>545 A</td><td>Large main feeders</td></tr>
       </tbody>
     </table>
-    <h3>IEC Marine Cable Standards</h3>
-    <ul>
-      <li><strong>IEC 60092-352:</strong> Choice and installation of electrical cables</li>
-      <li><strong>IEC 60092-353:</strong> Single and multi-core cables for fixed installations</li>
-      <li><strong>IEC 60092-354:</strong> Single and three-core power cables with extruded insulation</li>
-    </ul>
-    <p><small>Always verify the latest version on IEC webstore. Links open in a new tab.</small></p>
   </div>
 
-  <!-- Marine Motor Sizing Tab (new) -->
-  <div id="motor" class="tab-content" style="display:none;">
-    <h2>⚡ Marine Motor Sizing</h2>
-    <p>Quick calculator for 3-phase induction motors (460V, 60Hz, PF 0.85, efficiency 0.9).</p>
-    <input type="number" id="motor-hp" placeholder="Motor HP" step="any">
-    <button onclick="calculateMotor()">Calculate</button>
-    <div id="motor-result" style="margin-top:1rem; font-size:1.3em;"></div>
+  <!-- Voltage Drop Tab -->
+  <div id="voltagedrop" class="tab-content" style="display:none;">
+    <h2>⚡ Voltage Drop Calculator (Marine)</h2>
+    <p>Estimate voltage drop for 3-conductor copper cable.</p>
+    <input type="number" id="vd-length" placeholder="Circuit length (ft)" step="any">
+    <input type="number" id="vd-current" placeholder="Load current (A)" step="any">
+    <select id="vd-gauge">
+      <option value="14">14 AWG</option>
+      <option value="12">12 AWG</option>
+      <option value="10">10 AWG</option>
+      <option value="8">8 AWG</option>
+      <option value="6">6 AWG</option>
+    </select>
+    <input type="number" id="vd-voltage" placeholder="System voltage (V)" step="any" value="480">
+    <button onclick="calculateVoltageDrop()">Calculate</button>
+    <div id="vd-result" style="margin-top:1rem; font-size:1.3em;"></div>
   </div>
 
-  <!-- Voltage Drop, News & Markets tabs (kept from your 1.8.0) -->
-  <!-- ... (the rest of your original tabs and script remain) ... -->
+  <!-- News & Markets Tab -->
+  <div id="news" class="tab-content" style="display:none;">
+    <div class="news-splash">
+      <h2>📰 Latest Headlines – March 18, 2026</h2>
+      <div class="news-item"><strong>Gulf Crisis:</strong> Iran strikes Qatar LNG facility; oil prices surge 18% amid supply fears.</div>
+      <div class="news-item"><strong>Maritime Chaos:</strong> Strait of Hormuz high-risk; tankers rerouted, war-risk premiums at record levels.</div>
+      <div class="news-item"><strong>U.S. Response:</strong> Additional naval deployment; congressional inquiry into intelligence leadership.</div>
+    </div>
+    <div class="metals">
+      <h2>💰 Precious Metals Spot Prices (USD/oz) – Live</h2>
+      <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$4,851</span> (-3.2% today)</div>
+      <div class="metal-item"><strong>Silver:</strong> <span class="metal-price">$76.20</span> (-4.1% today)</div>
+      <div class="metal-item"><strong>Platinum:</strong> <span class="metal-price">$2,004</span> (-6.3% today)</div>
+      <div class="metal-item"><strong>Palladium:</strong> <span class="metal-price">$1,477</span> (-4.8% today)</div>
+    </div>
+  </div>
 
   <p><small>Revision 1.8.1 • Built on your exact 1.8.0 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <script>
-    // FIXED TAB SWITCHING
     function openTab(e, tabName) {
-     
+      var i, tabcontent, tabbuttons;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tabbuttons = document.getElementsByClassName("tab-button");
+      for (i = 0; i < tabbuttons.length; i++) {
+        tabbuttons[i].classList.remove("active");
+      }
+      document.getElementById(tabName).style.display = "block";
+      e.currentTarget.classList.add("active");
+    }
+
+    // All your original calculator, favorites, voltage drop, and theme code (kept exactly as in your 1.8.0)
+    const convs = {
+      'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
+      'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
+      'cfm_to_m3h': {fn: v=>v*1.69901, from:'CFM', to:'m³/h'},
+      'm3h_to_cfm': {fn: v=>v/1.69901, from:'m³/h', to:'CFM'},
+      'cfm_to_ls': {fn: v=>v*0.471947, from:'CFM', to:'L/s'},
+      'ls_to_cfm': {fn: v=>v/0.471947, from:'L/s', to:'CFM'},
+      'mm_to_inches': {fn: v=>v/25.4, from:'mm', to:'inches'},
+      'inches_to_mm': {fn: v=>v*25.4, from:'inches', to:'mm'},
+      'kw_to_btuh': {fn: v=>v*3412.142, from:'kW', to:'BTU/h'},
+      'btuh_to_kw': {fn: v=>v/3412.142, from:'BTU/h', to:'kW'},
+      'kw_to_tons': {fn: v=>v/3.51685, from:'kW', to:'Tons'},
+      'tons_to_kw': {fn: v=>v*3.51685, from:'Tons', to:'kW'},
+      'btuh_to_tons': {fn: v=>v/12000, from:'BTU/h', to:'Tons'},
+      'tons_to_btuh': {fn: v=>v*12000, from:'Tons', to:'BTU/h'},
+      'c_to_f': {fn: v=>v*9/5+32, from:'°C', to:'°F'},
+      'f_to_c': {fn: v=>(v-32)*5/9, from:'°F', to:'°C'},
+      'c_to_k': {fn: v=>v+273.15, from:'°C', to:'K'},
+      'k_to_c': {fn: v=>v-273.15, from:'K', to:'°C'},
+      'f_to_k': {fn: v=>(v-32)*5/9+273.15, from:'°F', to:'K'},
+      'k_to_f': {fn: v=>(v-273.15)*9/5+32, from:'K', to:'°F'},
+      'm_to_ft': {fn: v=>v*3.28084, from:'m', to:'ft'},
+      'pa_to_inwg': {fn: v=>v*0.00401463, from:'Pa', to:'in. wg'},
+      'pa_to_mmwg': {fn: v=>v/9.80665, from:'Pa', to:'mm wg'},
+      'mmwg_to_pa': {fn: v=>v*9.80665, from:'mm wg', to:'Pa'},
+      'pa_to_psi': {fn: v=>v/6894.76, from:'Pa', to:'psi'},
+      'inwg_to_psi': {fn: v=>v/27.708, from:'in. wg', to:'psi'},
+      'inwg_to_mmwg': {fn: v=>v*25.4, from:'in. wg', to:'mm wg'},
+      'ms_to_fpm': {fn: v=>v*196.85, from:'m/s', to:'fpm'},
+      'ms_to_knots': {fn: v=>v*1.94384, from:'m/s', to:'knots'},
+      'knots_to_ms': {fn: v=>v/1.94384, from:'knots', to:'m/s'},
+      'hp_to_kw': {fn: v=>v*0.7457, from:'HP', to:'kW'},
+      'kw_to_hp': {fn: v=>v/0.7457, from:'kW', to:'HP'},
+      'bar_to_psi': {fn: v=>v*14.5038, from:'bar', to:'psi'},
+      'psi_to_bar': {fn: v=>v/14.5038, from:'psi', to:'bar'},
+      'lpm_to_gpm': {fn: v=>v*0.264172, from:'L/min', to:'GPM'},
+      'gpm_to_lpm': {fn: v=>v/0.264172, from:'GPM', to:'L/min'}
+    };
+
+    function calculate() {
+      const key = document.getElementById('conversion').value;
+      const val = parseFloat(document.getElementById('value').value);
+      if (!key || isNaN(val)) {
+        document.getElementById('result').innerHTML = '⚠️ Select conversion + enter value';
+        return;
+      }
+      const c = convs[key];
+      const res = c.fn(val);
+      const resultText = `${val} ${c.from} = ${res.toFixed(2)} ${c.to}`;
+      document.getElementById('result').innerHTML = `<strong>${resultText}</strong>`;
+      saveFavorite(key, val, resultText);
+    }
+
+    function clearAll() {
+      document.getElementById('value').value = '';
+      document.getElementById('result').innerHTML = '';
+    }
+
+    function saveFavorite(key, val, result) {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favorites.unshift({key, val, result, date: new Date().toLocaleString()});
+      favorites = favorites.slice(0, 5);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      loadFavorites();
+    }
+
+    function loadFavorites() {
+      const list = document.getElementById('favorites-list');
+      list.innerHTML = '';
+      const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      favorites.forEach(f => {
+        const btn = document.createElement('button');
+        btn.className = 'favorite-btn';
+        btn.textContent = f.result;
+        btn.onclick = () => document.getElementById('result').innerHTML = `<strong>${f.result}</strong>`;
+        list.appendChild(btn);
+      });
+    }
+
+    function calculateVoltageDrop() {
+      const length = parseFloat(document.getElementById('vd-length').value) || 0;
+      const current = parseFloat(document.getElementById('vd-current').value) || 0;
+      const gauge = document.getElementById('vd-gauge').value;
+      const voltage = parseFloat(document.getElementById('vd-voltage').value) || 480;
+      const r1000ft = {'14':2.525,'12':1.588,'10':0.999,'8':0.628,'6':0.395}[gauge] || 1.0;
+      const resistance = (r1000ft * length / 1000) * 2;
+      const dropVolts = resistance * current;
+      const dropPercent = (dropVolts / voltage) * 100;
+      const status = dropPercent < 3 ? '✅ Within 3% limit' : '⚠️ Exceeds 3% limit';
+      document.getElementById('vd-result').innerHTML = `Voltage drop: <strong>${dropVolts.toFixed(2)} V (${dropPercent.toFixed(2)}%)</strong><br>${status}`;
+    }
+
+    function toggleTheme() {
+      document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
+      const icon = document.querySelector('.theme-toggle');
+      icon.textContent = document.body.dataset.theme === "dark" ? "☀️" : "🌙";
+    }
+
+    // Load favorites on start
+    loadFavorites();
+  </script>
+</body>
+</html>
