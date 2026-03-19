@@ -50,7 +50,17 @@
       margin-bottom: 2rem;
       transition: background 0.3s;
     }
-    .install { background: var(--accent); color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.4em; margin: 30px 0; line-height: 1.5; font-weight: 600; }
+    .install {
+      background: var(--accent);
+      color: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.4em;
+      margin: 30px 0;
+      line-height: 1.5;
+      font-weight: 600;
+    }
     select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; box-sizing: border-box; }
     button { background: var(--accent); color: white; border: none; font-weight: bold; cursor: pointer; }
     button:hover { background: var(--accent-dark); }
@@ -92,7 +102,6 @@
     }
     .favorites { margin-top: 1rem; }
     .favorite-btn { background: #4caf50; margin: 5px; font-size: 0.9em; }
-    .refresh-btn { background: #4caf50; margin-top: 1rem; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -283,7 +292,7 @@
     <button class="refresh-btn" onclick="location.reload()">Refresh Prices</button>
   </div>
 
-  <!-- Bottom installation banner (only one) -->
+  <!-- Single bottom installation banner -->
   <div class="install">
     <strong>📱 Add to iPhone Home Screen – Safari only</strong><br><br>
     1. Tap the Share button (square with ↑ arrow) in Safari.<br>
@@ -292,11 +301,11 @@
     The app will use your Global HVAC logo.
   </div>
 
-  <p><small>Revision 1.7.8 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 1.7.9 • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <!-- Scripts -->
   <script>
-    // Tab switching (fixed)
+    // Tab switching
     function openTab(tabName) {
       var i, tabcontent, tabbuttons;
       tabcontent = document.getElementsByClassName("tab-content");
@@ -308,7 +317,6 @@
         tabbuttons[i].classList.remove("active");
       }
       document.getElementById(tabName).style.display = "block";
-      // Add active class to clicked button
       event.currentTarget.classList.add("active");
     }
 
@@ -319,7 +327,7 @@
       icon.textContent = document.body.dataset.theme === "dark" ? "☀️" : "🌙";
     }
 
-    // Calculator (unchanged)
+    // Calculator
     const convs = {
       'cmh_to_cfm': {fn: v=>v*0.588578, from:'CMH', to:'CFM'},
       'cfm_to_cmh': {fn: v=>v/0.588578, from:'CFM', to:'CMH'},
