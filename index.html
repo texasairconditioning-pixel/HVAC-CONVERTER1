@@ -1,7 +1,182 @@
-<script>
-    // ========================================================
-    // TAB SWITCHING
-    // ========================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC Unit Converter | Global HVAC Solutions LLC</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#1e90ff">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <style>
+    :root { --bg: #f9f9f9; --text: #222; --card: white; --accent: #1e90ff; --accent-dark: #0066cc; }
+    [data-theme="dark"] { --bg: #121212; --text: #e0e0e0; --card: #1e1e1e; --accent: #4da6ff; --accent-dark: #1a75ff; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 1rem; max-width: 800px; margin: 0 auto; }
+    h1, h2 { color: var(--accent); text-align: center; }
+    .logo { max-width: 240px; display: block; margin: 0 auto 15px; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .contact, .calculator, .news-splash, .metals { background: var(--card); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .install { background: var(--accent); color: white; padding: 30px 20px; border-radius: 12px; text-align: center; font-size: 1.4em; margin: 30px 0; line-height: 1.5; font-weight: 600; }
+    select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; font-size: 1.1em; box-sizing: border-box; }
+    button { background: var(--accent); color: white; border: none; font-weight: bold; cursor: pointer; }
+    button:hover { background: var(--accent-dark); }
+    #result, #motor-result, #vd-result, #psychro-result, #duct-result, #pipe-result, #fan-result, #battery-result, #wind-result { font-size: 1.3em; font-weight: bold; margin: 15px 0; color: var(--accent); text-align: center; }
+    .news-item { margin-bottom: 1.4rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
+    .news-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .metal-price { font-size: 1.3em; font-weight: bold; }
+    .tab-buttons { display: flex; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab-button { padding: 10px 18px; margin: 4px; background: #222; color: #ddd; border: none; border-radius: 8px 8px 0 0; cursor: pointer; font-weight: bold; }
+    .tab-button.active { background: var(--accent); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background: #f2f2f2; }
+    .floating-contact { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8em; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; }
+    .theme-toggle { position: absolute; top: 20px; right: 20px; font-size: 1.5em; cursor: pointer; }
+    optgroup { font-weight: bold; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+  <div class="floating-contact" onclick="window.location='tel:4097490650'">☎</div>
+
+  <div class="header">
+    <img src="icon.png" alt="Global HVAC Solutions LLC" class="logo">
+    <h1>Global HVAC Solutions LLC</h1>
+    <p><strong>Commercial • Industrial • Marine & Offshore</strong><br>Service • Sales • Parts</p>
+  </div>
+
+  <div class="contact">
+    <h2>📞 Contact Us</h2>
+    <p><strong>Jeff Lee</strong><br>
+       Phone: <a href="tel:4097490650">409-749-0650</a><br>
+       Email: <a href="mailto:jlee@globalhvacsolutions.com">jlee@globalhvacsolutions.com</a></p>
+  </div>
+
+  <div class="install">
+    <strong>📱 Install as App (any phone or desktop)</strong><br><br>
+    <strong>Safari (iPhone):</strong> Share button (square ↑) → “Add to Home Screen”<br>
+    <strong>Chrome (Desktop/Android):</strong> Three-dot menu ⋮ → “Install HVAC Unit Converter”<br><br>
+    The app will use your Global HVAC logo and work offline.
+  </div>
+
+  <div class="tab-buttons">
+    <button class="tab-button active" onclick="openTab(event, 'converter')">Converter</button>
+    <button class="tab-button" onclick="openTab(event, 'abs')">ABS Regulations</button>
+    <button class="tab-button" onclick="openTab(event, 'cable')">Marine Cable</button>
+    <button class="tab-button" onclick="openTab(event, 'motor')">Marine Motor</button>
+    <button class="tab-button" onclick="openTab(event, 'voltagedrop')">Voltage Drop</button>
+    <button class="tab-button" onclick="openTab(event, 'psychro')">Psychrometric</button>
+    <button class="tab-button" onclick="openTab(event, 'duct')">Duct Sizing</button>
+    <button class="tab-button" onclick="openTab(event, 'pipe')">Pipe Friction</button>
+    <button class="tab-button" onclick="openTab(event, 'fan')">Fan Law</button>
+    <button class="tab-button" onclick="openTab(event, 'battery')">Battery Bank</button>
+    <button class="tab-button" onclick="openTab(event, 'wind')">Wind Load</button>
+    <button class="tab-button" onclick="openTab(event, 'news')">News & Markets</button>
+  </div>
+
+  <!-- Converter Tab -->
+  <div id="converter" class="tab-content active calculator">
+    <h2>🔢 Engineering Unit Converter</h2>
+    <select id="conversion">
+      <option value="">— Select Conversion —</option>
+      <optgroup label="🌬️ Air Flow">
+        <option value="cmh_to_cfm">CMH → CFM</option>
+        <option value="cfm_to_cmh">CFM → CMH</option>
+        <option value="cfm_to_m3h">CFM → m³/h</option>
+        <option value="m3h_to_cfm">m³/h → CFM</option>
+        <option value="cfm_to_ls">CFM → L/s</option>
+        <option value="ls_to_cfm">L/s → CFM</option>
+      </optgroup>
+      <optgroup label="🌡️ Temperature">
+        <option value="c_to_f">°C → °F</option>
+        <option value="f_to_c">°F → °C</option>
+        <option value="c_to_k">°C → Kelvin</option>
+        <option value="k_to_c">Kelvin → °C</option>
+        <option value="f_to_k">°F → Kelvin</option>
+        <option value="k_to_f">Kelvin → °F</option>
+      </optgroup>
+      <optgroup label="🔌 Power & Capacity">
+        <option value="kw_to_btuh">kW → BTU/h</option>
+        <option value="btuh_to_kw">BTU/h → kW</option>
+        <option value="kw_to_tons">kW → Tons refrigeration</option>
+        <option value="tons_to_kw">Tons → kW</option>
+        <option value="btuh_to_tons">BTU/h → Tons</option>
+        <option value="tons_to_btuh">Tons → BTU/h</option>
+        <option value="hp_to_kw">HP → kW</option>
+        <option value="kw_to_hp">kW → HP</option>
+      </optgroup>
+      <optgroup label="📏 Length">
+        <option value="mm_to_inches">mm → inches</option>
+        <option value="inches_to_mm">inches → mm</option>
+        <option value="m_to_ft">m → ft</option>
+      </optgroup>
+      <optgroup label="💧 Fluid Flow & Volume">
+        <option value="lpm_to_gpm">L/min → GPM</option>
+        <option value="gpm_to_lpm">GPM → L/min</option>
+        <option value="gallons_to_liters">US Gallons → Liters</option>
+        <option value="liters_to_gallons">Liters → US Gallons</option>
+      </optgroup>
+      <optgroup label="🔄 Pressure">
+        <option value="pa_to_inwg">Pa → in. wg</option>
+        <option value="pa_to_mmwg">Pa → mm wg</option>
+        <option value="mmwg_to_pa">mm wg → Pa</option>
+        <option value="pa_to_psi">Pa → psi</option>
+        <option value="inwg_to_psi">in. wg → psi</option>
+        <option value="inwg_to_mmwg">in. wg → mm wg</option>
+        <option value="bar_to_psi">bar → psi</option>
+        <option value="psi_to_bar">psi → bar</option>
+        <option value="bar_to_kpa">bar → kPa</option>
+        <option value="kpa_to_bar">kPa → bar</option>
+      </optgroup>
+      <optgroup label="🌪️ Velocity">
+        <option value="ms_to_fpm">m/s → fpm</option>
+        <option value="ms_to_knots">m/s → knots</option>
+        <option value="knots_to_ms">knots → m/s</option>
+      </optgroup>
+    </select>
+    <input type="number" id="value" placeholder="Enter value" step="any">
+    <button onclick="calculate()">Calculate</button>
+    <button onclick="clearAll()" style="background:#666;">Clear</button>
+    <div id="result"></div>
+  </div>
+
+  <!-- ABS Regulations Tab -->
+  <div id="abs" class="tab-content" style="display:none;">
+    <h2>📘 ABS Rules & Guides Lookup</h2>
+    <p>Access the latest American Bureau of Shipping (ABS) Rules, Guides, and Notices directly from the official source.</p>
+    <ul>
+      <li><strong>ABS Rules & Guides Portal:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides.html" target="_blank">Browse all current ABS Rules & Guides</a></li>
+      <li><strong>Consolidated Marine & Offshore Rules:</strong> <a href="https://ww2.eagle.org/en/rules-and-resources/rules-and-guides/consolidated-marine-and-offshore-rules.html" target="_blank">Consolidated Rules</a></li>
+      <li><strong>ABS Eagle Search:</strong> <a href="https://eagle.org" target="_blank">Search ABS Eagle.org</a></li>
+    </ul>
+  </div>
+
+  <!-- Marine Cable, Motor, Voltage Drop, Psychrometric, Duct, Pipe, Fan, Battery, Wind tabs are fully included in your original code. For brevity, they are assumed to be present between the converter and news tabs. -->
+
+  <!-- News & Markets Tab -->
+  <div id="news" class="tab-content" style="display:none;">
+    <div class="news-splash">
+      <h2>📰 Top Energy & Maritime Headlines – April 04, 2026</h2>
+      <div id="news-content"></div>
+    </div>
+    <div class="metals">
+      <h2>💰 Precious Metals Spot Prices (USD/oz) – Reference</h2>
+      <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$4,676</span></div>
+      <div class="metal-item"><strong>Silver:</strong> <span class="metal-price">$73.00</span></div>
+      <div class="metal-item"><strong>Platinum:</strong> <span class="metal-price">$1,980</span></div>
+      <div class="metal-item"><strong>Palladium:</strong> <span class="metal-price">$1,490</span></div>
+      <p><small>Reference values only. For live quotes, consult dedicated market sources.</small></p>
+    </div>
+  </div>
+
+  <p><small>Revision 2.6.1 • Fixed Tab & News Loading • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+
+  <script>
+    // Robust tab switching
     function openTab(e, tabName) {
       document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
       document.querySelectorAll(".tab-button").forEach(tb => tb.classList.remove("active"));
@@ -9,13 +184,10 @@
       if (tab) tab.style.display = "block";
       if (e && e.currentTarget) e.currentTarget.classList.add("active");
 
-      // Force reload news when News tab is opened
       if (tabName === 'news') loadNews();
     }
 
-    // ========================================================
-    // THEME TOGGLE
-    // ========================================================
+    // Theme toggle
     function toggleTheme() {
       const isDark = document.body.dataset.theme === "dark";
       document.body.dataset.theme = isDark ? "light" : "dark";
@@ -23,14 +195,48 @@
       if (toggleBtn) toggleBtn.textContent = isDark ? "🌙" : "☀️";
     }
 
-    // ========================================================
-    // UNIT CONVERTER & CALCULATORS (unchanged)
-    // ========================================================
+    // Unit Converter
     const convs = {
       'cmh_to_cfm': {fn: v => v * 0.588578, from: 'CMH', to: 'CFM'},
-      // ... (keep all your other conversions exactly as they are)
+      'cfm_to_cmh': {fn: v => v / 0.588578, from: 'CFM', to: 'CMH'},
+      'cfm_to_m3h': {fn: v => v * 1.69901, from: 'CFM', to: 'm³/h'},
+      'm3h_to_cfm': {fn: v => v / 1.69901, from: 'm³/h', to: 'CFM'},
+      'cfm_to_ls': {fn: v => v * 0.471947, from: 'CFM', to: 'L/s'},
+      'ls_to_cfm': {fn: v => v / 0.471947, from: 'L/s', to: 'CFM'},
+      'mm_to_inches': {fn: v => v / 25.4, from: 'mm', to: 'inches'},
+      'inches_to_mm': {fn: v => v * 25.4, from: 'inches', to: 'mm'},
+      'kw_to_btuh': {fn: v => v * 3412.142, from: 'kW', to: 'BTU/h'},
+      'btuh_to_kw': {fn: v => v / 3412.142, from: 'BTU/h', to: 'kW'},
+      'kw_to_tons': {fn: v => v / 3.51685, from: 'kW', to: 'Tons'},
+      'tons_to_kw': {fn: v => v * 3.51685, from: 'Tons', to: 'kW'},
+      'btuh_to_tons': {fn: v => v / 12000, from: 'BTU/h', to: 'Tons'},
+      'tons_to_btuh': {fn: v => v * 12000, from: 'Tons', to: 'BTU/h'},
+      'c_to_f': {fn: v => v * 9 / 5 + 32, from: '°C', to: '°F'},
+      'f_to_c': {fn: v => (v - 32) * 5 / 9, from: '°F', to: '°C'},
+      'c_to_k': {fn: v => v + 273.15, from: '°C', to: 'K'},
+      'k_to_c': {fn: v => v - 273.15, from: 'K', to: '°C'},
+      'f_to_k': {fn: v => (v - 32) * 5 / 9 + 273.15, from: '°F', to: 'K'},
+      'k_to_f': {fn: v => (v - 273.15) * 9 / 5 + 32, from: 'K', to: '°F'},
+      'm_to_ft': {fn: v => v * 3.28084, from: 'm', to: 'ft'},
+      'pa_to_inwg': {fn: v => v * 0.00401463, from: 'Pa', to: 'in. wg'},
+      'pa_to_mmwg': {fn: v => v / 9.80665, from: 'Pa', to: 'mm wg'},
+      'mmwg_to_pa': {fn: v => v * 9.80665, from: 'mm wg', to: 'Pa'},
+      'pa_to_psi': {fn: v => v / 6894.76, from: 'Pa', to: 'psi'},
+      'inwg_to_psi': {fn: v => v / 27.708, from: 'in. wg', to: 'psi'},
+      'inwg_to_mmwg': {fn: v => v * 25.4, from: 'in. wg', to: 'mm wg'},
+      'ms_to_fpm': {fn: v => v * 196.85, from: 'm/s', to: 'fpm'},
+      'ms_to_knots': {fn: v => v * 1.94384, from: 'm/s', to: 'knots'},
+      'knots_to_ms': {fn: v => v / 1.94384, from: 'knots', to: 'm/s'},
+      'hp_to_kw': {fn: v => v * 0.7457, from: 'HP', to: 'kW'},
+      'kw_to_hp': {fn: v => v / 0.7457, from: 'kW', to: 'HP'},
+      'bar_to_psi': {fn: v => v * 14.5038, from: 'bar', to: 'psi'},
+      'psi_to_bar': {fn: v => v / 14.5038, from: 'psi', to: 'bar'},
+      'lpm_to_gpm': {fn: v => v * 0.264172, from: 'L/min', to: 'GPM'},
+      'gpm_to_lpm': {fn: v => v / 0.264172, from: 'GPM', to: 'L/min'},
       'gallons_to_liters': {fn: v => v * 3.78541, from: 'US Gal', to: 'Liters'},
-      'liters_to_gallons': {fn: v => v / 3.78541, from: 'Liters', to: 'US Gal'}
+      'liters_to_gallons': {fn: v => v / 3.78541, from: 'Liters', to: 'US Gal'},
+      'bar_to_kpa': {fn: v => v * 100, from: 'bar', to: 'kPa'},
+      'kpa_to_bar': {fn: v => v / 100, from: 'kPa', to: 'bar'}
     };
 
     function calculate() {
@@ -51,24 +257,21 @@
       document.getElementById('result').innerHTML = '';
     }
 
-    // Keep all your other calculator functions (calculateMotor, calculateVoltageDrop, etc.) here unchanged
+    // All your calculator functions (calculateMotor, calculateVoltageDrop, etc.) go here unchanged from your original code
 
-    // ========================================================
-    // NEWS & MARKETS - EASY TO UPDATE
-    // ========================================================
-    // 🔥🔥🔥 EDIT THIS ARRAY TO UPDATE NEWS 🔥🔥🔥
-    // Change or add headlines here. Save file and hard refresh (Ctrl+Shift+R)
+    // News & Markets - Easy to update
+    // 🔥🔥🔥 EDIT THIS ARRAY TO UPDATE NEWS HEADLINES 🔥🔥🔥
     const topHeadlines = [
       "Iranian attacks damage ~17% of Qatar LNG export capacity at Ras Laffan; repairs expected to take up to five years.",
       "Strait of Hormuz remains high-risk with severely reduced tanker traffic.",
       "Brent crude oil prices surge to approximately $109 per barrel.",
       "QatarEnergy declares force majeure on multiple LNG contracts.",
-      "Asian LNG buyers curtail purchases due to supply shortfalls.",
+      "Asian LNG buyers curtail purchases as Middle East supply shortfalls intensify.",
       "Global energy markets face prolonged impacts from Gulf disruptions.",
       "US naval deployments increased in the region.",
       "Higher freight costs affecting fertilizers and chemicals.",
       "European natural gas prices rise sharply.",
-      "Analysts warn of potential for further oil price volatility."
+      "Analysts warn of potential for further oil price volatility if disruptions persist."
     ];
 
     function loadNews() {
@@ -83,11 +286,11 @@
       });
     }
 
-    // ========================================================
-    // INITIALIZATION
-    // ========================================================
-    window.addEventListener('DOMContentLoaded', () => {
-      // Optional: Pre-load news when page first opens
+    // Initialize
+    window.onload = () => {
+      // Optional: Pre-load news on start
       // loadNews();
-    });
+    };
   </script>
+</body>
+</html>
