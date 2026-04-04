@@ -144,7 +144,7 @@
     <div id="result"></div>
   </div>
 
-  <!-- ABS Regulations -->
+  <!-- ABS Regulations Tab -->
   <div id="abs" class="tab-content" style="display:none;">
     <h2>📘 ABS Rules & Guides Lookup</h2>
     <p>Access the latest American Bureau of Shipping (ABS) Rules, Guides, and Notices directly from the official source.</p>
@@ -155,7 +155,7 @@
     </ul>
   </div>
 
-  <!-- Marine Cable Sizing -->
+  <!-- Marine Cable Sizing Tab -->
   <div id="cable" class="tab-content" style="display:none;">
     <h2>⚓ Marine Cable Sizing Reference (3-Conductor)</h2>
     <p>Approximate ampacity for larger marine shipboard cables (90°C insulation, 40°C ambient).</p>
@@ -174,16 +174,109 @@
     </table>
   </div>
 
-  <!-- Remaining calculator tabs (Marine Motor, Voltage Drop, Psychrometric, Duct, Pipe, Fan, Battery, Wind) follow the same pattern as in the previous complete version. For brevity in this response, they are fully included in the actual file you copy. The script section below contains all functions. -->
+  <!-- Marine Motor Sizing Tab -->
+  <div id="motor" class="tab-content" style="display:none;">
+    <h2>⚡ Marine Motor Sizing</h2>
+    <p>Quick calculator for 3-phase induction motors (460V, 60Hz).</p>
+    <input type="number" id="motor-hp" placeholder="Motor HP" step="any">
+    <button onclick="calculateMotor()">Calculate</button>
+    <div id="motor-result"></div>
+  </div>
 
-  <!-- News & Markets Tab with 10 Expanded Top Headlines -->
+  <!-- Voltage Drop Tab -->
+  <div id="voltagedrop" class="tab-content" style="display:none;">
+    <h2>⚡ Voltage Drop Calculator (Marine)</h2>
+    <p>Estimate voltage drop for 3-conductor copper cable.</p>
+    <input type="number" id="vd-length" placeholder="Circuit length (ft)" step="any">
+    <input type="number" id="vd-current" placeholder="Load current (A)" step="any">
+    <select id="vd-gauge">
+      <option value="14">14 AWG</option>
+      <option value="12">12 AWG</option>
+      <option value="10">10 AWG</option>
+      <option value="8">8 AWG</option>
+      <option value="6">6 AWG</option>
+    </select>
+    <input type="number" id="vd-voltage" placeholder="System voltage (V)" step="any" value="480">
+    <button onclick="calculateVoltageDrop()">Calculate</button>
+    <div id="vd-result"></div>
+  </div>
+
+  <!-- Psychrometric Tab -->
+  <div id="psychro" class="tab-content" style="display:none;">
+    <h2>🌡️ Psychrometric Calculator</h2>
+    <input type="number" id="dry-bulb" placeholder="Dry-bulb °F" step="any">
+    <input type="number" id="wet-bulb" placeholder="Wet-bulb °F" step="any">
+    <button onclick="calculatePsychro()">Calculate</button>
+    <div id="psychro-result"></div>
+  </div>
+
+  <!-- Duct Sizing Tab -->
+  <div id="duct" class="tab-content" style="display:none;">
+    <h2>📏 Duct Sizing Calculator</h2>
+    <select id="duct-shape">
+      <option value="round">Round Duct</option>
+      <option value="square">Square Duct</option>
+    </select>
+    <input type="number" id="duct-cfm" placeholder="CFM" step="any">
+    <input type="number" id="duct-velocity" placeholder="Velocity (fpm)" step="any" value="1200">
+    <button onclick="calculateDuct()">Calculate</button>
+    <div id="duct-result"></div>
+  </div>
+
+  <!-- Pipe Friction Loss Tab -->
+  <div id="pipe" class="tab-content" style="display:none;">
+    <h2>🛢️ Pipe Friction Loss</h2>
+    <input type="number" id="pipe-gpm" placeholder="Flow (GPM)" step="any">
+    <input type="number" id="pipe-dia" placeholder="Diameter (in)" step="any">
+    <input type="number" id="pipe-length" placeholder="Length (ft)" step="any">
+    <button onclick="calculatePipe()">Calculate</button>
+    <div id="pipe-result"></div>
+  </div>
+
+  <!-- Fan Law Tab -->
+  <div id="fan" class="tab-content" style="display:none;">
+    <h2>🌬️ Fan Law Calculator</h2>
+    <input type="number" id="fan-old-cfm" placeholder="Old CFM" step="any">
+    <input type="number" id="fan-old-sp" placeholder="Old SP (in. wg)" step="any">
+    <input type="number" id="fan-old-rpm" placeholder="Old RPM" step="any">
+    <input type="number" id="fan-new" placeholder="New value" step="any">
+    <select id="fan-change">
+      <option value="cfm">Change CFM</option>
+      <option value="sp">Change SP</option>
+      <option value="rpm">Change RPM</option>
+    </select>
+    <button onclick="calculateFan()">Calculate</button>
+    <div id="fan-result"></div>
+  </div>
+
+  <!-- Battery Bank Tab -->
+  <div id="battery" class="tab-content" style="display:none;">
+    <h2>🔋 Battery Bank Sizing</h2>
+    <input type="number" id="battery-load" placeholder="Load (W)" step="any">
+    <input type="number" id="battery-hours" placeholder="Hours" step="any" value="24">
+    <input type="number" id="battery-volt" placeholder="Voltage (V)" step="any" value="12">
+    <button onclick="calculateBattery()">Calculate</button>
+    <div id="battery-result"></div>
+  </div>
+
+  <!-- Wind Load Tab -->
+  <div id="wind" class="tab-content" style="display:none;">
+    <h2>🌬️ Wind Load Calculator</h2>
+    <input type="number" id="wind-speed" placeholder="Wind speed (mph)" step="any">
+    <input type="number" id="wind-area" placeholder="Area (ft²)" step="any">
+    <input type="number" id="wind-height" placeholder="Height (ft)" step="any">
+    <button onclick="calculateWind()">Calculate</button>
+    <div id="wind-result"></div>
+  </div>
+
+  <!-- News & Markets Tab – Expanded Top Headlines -->
   <div id="news" class="tab-content" style="display:none;">
     <div class="news-splash">
-      <h2>📰 Top Energy & Maritime Headlines – April 02, 2026</h2>
+      <h2>📰 Top Energy & Maritime Headlines – April 03, 2026</h2>
       <div id="news-content"></div>
     </div>
     <div class="metals">
-      <h2>💰 Precious Metals Spot Prices (USD/oz) – April 02, 2026</h2>
+      <h2>💰 Precious Metals Spot Prices (USD/oz) – Reference</h2>
       <div class="metal-item"><strong>Gold:</strong> <span class="metal-price">$4,676</span></div>
       <div class="metal-item"><strong>Silver:</strong> <span class="metal-price">$73.00</span></div>
       <div class="metal-item"><strong>Platinum:</strong> <span class="metal-price">$1,980</span></div>
@@ -192,7 +285,7 @@
     </div>
   </div>
 
-  <p><small>Revision 2.4.0 • Fully Restored with Expanded Headlines • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
+  <p><small>Revision 2.5.0 • Fully Restored with Expanded Headlines • Global HVAC Solutions LLC • Jeff Lee • 409-749-0650</small></p>
 
   <script>
     function openTab(e, tabName) {
@@ -203,7 +296,6 @@
       if (tabName === 'news') loadNews();
     }
 
-    // Full conversion library
     const convs = {
       'cmh_to_cfm': {fn: v => v * 0.588578, from: 'CMH', to: 'CFM'},
       'cfm_to_cmh': {fn: v => v / 0.588578, from: 'CFM', to: 'CMH'},
@@ -265,7 +357,6 @@
       document.getElementById('result').innerHTML = '';
     }
 
-    // All original calculator functions
     function calculateMotor() {
       const hp = parseFloat(document.getElementById('motor-hp').value) || 0;
       if (hp === 0) { document.getElementById('motor-result').innerHTML = 'Enter HP'; return; }
@@ -365,18 +456,18 @@
       document.querySelector('.theme-toggle').textContent = isDark ? "🌙" : "☀️";
     }
 
-    // Expanded Top Headlines (10 concise, relevant items)
+    // Expanded Top Headlines (curated as of April 03, 2026)
     const topHeadlines = [
-      "Strait of Hormuz remains largely closed after one month of conflict; global oil flows reduced by up to 60%.",
-      "Iranian strikes cause extensive damage to Qatar Ras Laffan LNG complex; repairs could take several years.",
-      "Oil prices hover near $110–$116 per barrel with potential to reach $150 or higher if disruptions continue.",
+      "Iranian attacks damage ~17% of Qatar LNG export capacity at Ras Laffan; repairs expected to take up to five years.",
+      "Strait of Hormuz remains high-risk with severely reduced tanker traffic; global oil and LNG supply significantly disrupted.",
+      "Brent crude oil prices surge to approximately $109 per barrel amid the ongoing supply shock.",
       "QatarEnergy declares force majeure on multiple LNG contracts due to facility damage and shipping issues.",
-      "European natural gas prices surge over 35% amid fears of prolonged LNG supply shortages from the Gulf.",
-      "Asian LNG buyers cut purchases and begin rationing fuel as Qatar and Hormuz disruptions intensify.",
-      "IEA describes current situation as the largest oil supply shock in history; growth forecasts revised downward.",
-      "Refined fuel prices (diesel, jet fuel) exceed $200 in some markets, showing early signs of demand destruction.",
-      "US and allied naval presence increased in the region to monitor and support safe passage where possible.",
-      "Broader impacts hit fertilizers, chemicals, and global commodities; freight costs reach historic highs."
+      "Asian LNG buyers curtail purchases as Middle East supply shortfalls intensify.",
+      "Global energy markets face prolonged impacts; economic growth forecasts revised downward.",
+      "US and allied naval deployments increased to monitor the situation in the Gulf.",
+      "Broader effects include higher freight costs and disruptions to fertilizers and chemicals.",
+      "European natural gas prices rise sharply as buyers seek alternative sourcing.",
+      "Analysts warn of potential for further oil price volatility if disruptions persist."
     ];
 
     function loadNews() {
@@ -390,7 +481,6 @@
       });
     }
 
-    // Initialize
     window.onload = () => {};
   </script>
 </body>
